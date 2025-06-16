@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AdminLoginController;
 
 /* Student Routes */
 
@@ -36,9 +36,11 @@ Route::get('/student_profile', function () {
 
 /* Admin Routes */
 
-Route::get('/admin_loginx', function () {
-    return view('admin.login.login');
-})->name('admin_loginx');
+Route::prefix('admin_loginx')->group(function () {
+    Route::get('/', [AdminLoginController::class, 'index'])->name('admin_loginx');
+    Route::post('/loginx', [AdminLoginController::class, 'login'])->name('loginx');
+    Route::post('/logoutx', [AdminLoginController::class, 'logout'])->name('logoutx');
+});
 
 Route::get('/admin_dashboard', function () {
     return view('admin.dashboard.dashboard');
