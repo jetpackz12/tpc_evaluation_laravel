@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AccountStatusSeeder::class,
             StudentStatusSeeder::class,
-            YearLevelSeeder::class
+            YearLevelSeeder::class,
+            ProgramSeeder::class
         ]);
     }
 }
