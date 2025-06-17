@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\SubjectController;
 
 /* Student Routes */
 
@@ -66,9 +67,13 @@ Route::get('/program_management', function () {
     return view('admin.program_management.program_management');
 })->name('program_management');
 
-Route::get('/subject_management', function () {
-    return view('admin.subject_management.subject_management');
-})->name('subject_management');
+Route::prefix('subject_management')->group(function() {
+    Route::get('/', [SubjectController::class, 'index'])->name('subject_management');
+    Route::post('/store', [SubjectController::class, 'store'])->name('subject_management_store');
+    Route::get('/edit', [SubjectController::class, 'edit'])->name('subject_management_edit');
+    Route::post('/update', [SubjectController::class, 'update'])->name('subject_management_update');
+    Route::post('/status', [SubjectController::class, 'status'])->name('subject_management_status');
+});
 
 Route::get('/category_management', function () {
     return view('admin.category_management.category_management');
