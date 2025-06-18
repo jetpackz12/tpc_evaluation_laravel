@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SubjectController;
 
 /* Student Routes */
@@ -75,9 +76,13 @@ Route::prefix('subject_management')->group(function() {
     Route::post('/status', [SubjectController::class, 'status'])->name('subject_management_status');
 });
 
-Route::get('/category_management', function () {
-    return view('admin.category_management.category_management');
-})->name('category_management');
+Route::prefix('category_management')->group(function() {
+    Route::get('/', [CategoryController::class, 'index'])->name('category_management');
+    Route::post('/store', [CategoryController::class, 'store'])->name('category_management_store');
+    Route::get('/edit', [CategoryController::class, 'edit'])->name('category_management_edit');
+    Route::post('/update', [CategoryController::class, 'update'])->name('category_management_update');
+    Route::post('/status', [CategoryController::class, 'status'])->name('category_management_status');
+});
 
 Route::get('/facetoface_question', function () {
     return view('admin.evaluation_management.facetoface_question');

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Category;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -23,7 +24,8 @@ class DatabaseSeeder extends Seeder
             StudentStatusSeeder::class,
             YearLevelSeeder::class,
             ProgramSeeder::class,
-            SemesterSeeder::class
+            SemesterSeeder::class,
+            CategorySeeder::class
         ]);
     }
 }
