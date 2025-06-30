@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FaceToFaceQuestionController;
 use App\Http\Controllers\SubjectController;
 
 /* Student Routes */
@@ -84,9 +85,13 @@ Route::prefix('category_management')->group(function() {
     Route::post('/status', [CategoryController::class, 'status'])->name('category_management_status');
 });
 
-Route::get('/facetoface_question', function () {
-    return view('admin.evaluation_management.facetoface_question');
-})->name('facetoface_question');
+Route::prefix('facetoface_question')->group(function() {
+    Route::get('/', [FaceToFaceQuestionController::class, 'index'])->name('facetoface_question');
+    Route::post('/store', [FaceToFaceQuestionController::class, 'store'])->name('facetoface_question_store');
+    Route::get('/edit', [FaceToFaceQuestionController::class, 'edit'])->name('facetoface_question_edit');
+    Route::post('/update', [FaceToFaceQuestionController::class, 'update'])->name('facetoface_question_update');
+    Route::post('/status', [FaceToFaceQuestionController::class, 'status'])->name('facetoface_question_status');
+});
 
 Route::get('/online_question', function () {
     return view('admin.evaluation_management.online_question');
