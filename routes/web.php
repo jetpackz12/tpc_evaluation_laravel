@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FaceToFaceQuestionController;
 use App\Http\Controllers\OnlineQuestionController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\SubjectMatterQuestionController;
 
 /* Student Routes */
 
@@ -102,9 +103,13 @@ Route::prefix('online_question')->group(function() {
     Route::post('/status', [OnlineQuestionController::class, 'status'])->name('online_question_status');
 });
 
-Route::get('/subject_matter_question', function () {
-    return view('admin.evaluation_management.subject_matter_question');
-})->name('subject_matter_question');
+Route::prefix('subject_matter_question')->group(function() {
+    Route::get('/', [SubjectMatterQuestionController::class, 'index'])->name('subject_matter_question');
+    Route::post('/store', [SubjectMatterQuestionController::class, 'store'])->name('subject_matter_question_store');
+    Route::get('/edit', [SubjectMatterQuestionController::class, 'edit'])->name('subject_matter_question_edit');
+    Route::post('/update', [SubjectMatterQuestionController::class, 'update'])->name('subject_matter_question_update');
+    Route::post('/status', [SubjectMatterQuestionController::class, 'status'])->name('subject_matter_question_status');
+});
 
 Route::get('/evaluation_result', function () {
     return view('admin.evaluation_result.evaluation_result');
