@@ -46,30 +46,43 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>Active</td>
-                                            <td class="d-flex justify-content-center align-items-center">
-                                                <button class="btn btn-primary mr-1 editWithData" data-id=""
-                                                    data-toggle="modal" data-target="#modal-edit">
-                                                    <i class="fa fa-edit mr-1"></i>
-                                                    Edit
-                                                </button>
-                                                <button class="btn btn-danger editStatus" data-id="" data-status=""
-                                                    data-toggle="modal" data-target="#modal-delete">
-                                                    <i class="fa fa-times-circle mr-1"></i>
-                                                    Disabled
-                                                </button>
-                                                <button class="btn btn-warning editStatus" data-id="" data-status=""
-                                                    data-toggle="modal" data-target="#modal-delete">
-                                                    <i class="fa fa-check-circle mr-1"></i>
-                                                    Enabled
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        @php
+                                            $counter = 1;
+                                        @endphp
+                                        @foreach ($online_questions as $online_question)
+                                            <tr>
+                                                <td>{{ $counter++ }}</td>
+                                                <td>{{ $online_question->category_name }}</td>
+                                                <td>{{ $online_question->modality }}</td>
+                                                <td>{{ $online_question->question }}</td>
+                                                <td>{{ $online_question->status == 1 ? 'Active' : 'Inactive' }}</td>
+                                                <td class="d-flex justify-content-center align-items-center">
+                                                    <button class="btn btn-primary mr-1 editWithData"
+                                                        data-id="{{ $online_question->id }}" data-toggle="modal"
+                                                        data-target="#modal-edit">
+                                                        <i class="fa fa-edit mr-1"></i>
+                                                        Edit
+                                                    </button>
+                                                    @if ($online_question->status == 1)
+                                                        <button class="btn btn-danger editStatus"
+                                                            data-id="{{ $online_question->id }}"
+                                                            data-status="{{ $online_question->status }}"
+                                                            data-toggle="modal" data-target="#modal-delete">
+                                                            <i class="fa fa-times-circle mr-1"></i>
+                                                            Disabled
+                                                        </button>
+                                                    @else
+                                                        <button class="btn btn-warning editStatus"
+                                                            data-id="{{ $online_question->id }}"
+                                                            data-status="{{ $online_question->status }}"
+                                                            data-toggle="modal" data-target="#modal-delete">
+                                                            <i class="fa fa-check-circle mr-1"></i>
+                                                            Enabled
+                                                        </button>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -96,7 +109,8 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="#" method="POST" class="postForm">
+                <form action="{{ route('online_question_store') }}" method="POST" class="postForm">
+                    @csrf
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-12">
@@ -104,6 +118,10 @@
                                     <label for="exampleCategoryName">Category Name</label>
                                     <select class="form-control" id="exampleCategoryName" name="category_name" required>
                                         <option value="" selected disabled>---Select Category---</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->category_name }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -143,7 +161,8 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="#" method="POST" class="postForm">
+                <form action="{{ route('online_question_update') }}" method="POST" class="postForm">
+                    @csrf
                     <div class="modal-body">
                         <div class="row">
                             <input type="text" class="form-control" id="e_id" name="id" hidden>
@@ -151,6 +170,10 @@
                                 <div class="form-group">
                                     <label for="e_category_name">Category Name</label>
                                     <select class="form-control" id="e_category_name" name="category_name" required>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->category_name }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -186,7 +209,8 @@
                         Status
                     </h4>
                 </div>
-                <form action="#" method="POST" class="postForm">
+                <form action="{{ route('online_question_status') }}" method="POST" class="postForm">
+                    @csrf
                     <div class="modal-body">
                         <input type="text" class="form-control id" name="id" hidden>
                         <input type="text" class="form-control status" name="status" hidden>
@@ -216,11 +240,11 @@
 
         $(document).ready(function() {
             $('.editWithData').on('click', function() {
-                const path = '';
+                const path = "{{ route('online_question_edit') }}";
                 const id = $(this).attr('data-id');
                 $('.id').val(id);
                 $.ajax({
-                    type: "POST",
+                    type: "GET",
                     cache: false,
                     url: path,
                     data: {
