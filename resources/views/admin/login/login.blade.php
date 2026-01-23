@@ -48,7 +48,8 @@
 
       <div class="card-body login-card-body rounded-lg">
         <h4 class="login-box-msg">Admin Login</h4>
-        <form action="#" id="frm" method="POST">
+        <form action="{{ route('loginx') }}" id="frm" method="POST">
+          @csrf
           <div class="input-group mb-3">
             <input type="text" class="form-control" name="username" placeholder="Username" required>
             <div class="input-group-append">
@@ -105,6 +106,9 @@
         cache: false,
         url: $(this).attr('action'),
         data: $(this).serialize(),
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         success: function(data) {
 
           const jsonData = JSON.parse(data);
@@ -123,7 +127,7 @@
                   title: `<p class="text-center pt-2 text-black"> ${jsonData['message']} </p>`
                 });
                 setTimeout(function() {
-                    window.location.href = "{{ route('admin_loginx') }}";
+                    window.location.href = "{{ route('admin_dashboard') }}";
                 }, 1500);
               break;
 

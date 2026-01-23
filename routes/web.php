@@ -1,7 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FaceToFaceQuestionController;
+use App\Http\Controllers\OnlineQuestionController;
+use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\SubjectMatterQuestionController;
 
 /* Student Routes */
 
@@ -36,9 +41,11 @@ Route::get('/student_profile', function () {
 
 /* Admin Routes */
 
-Route::get('/admin_loginx', function () {
-    return view('admin.login.login');
-})->name('admin_loginx');
+Route::prefix('admin_loginx')->group(function () {
+    Route::get('/', [AdminLoginController::class, 'index'])->name('admin_loginx');
+    Route::post('/loginx', [AdminLoginController::class, 'login'])->name('loginx');
+    Route::post('/logoutx', [AdminLoginController::class, 'logout'])->name('logoutx');
+});
 
 Route::get('/admin_dashboard', function () {
     return view('admin.dashboard.dashboard');
@@ -64,25 +71,45 @@ Route::get('/program_management', function () {
     return view('admin.program_management.program_management');
 })->name('program_management');
 
-Route::get('/subject_management', function () {
-    return view('admin.subject_management.subject_management');
-})->name('subject_management');
+Route::prefix('subject_management')->group(function() {
+    Route::get('/', [SubjectController::class, 'index'])->name('subject_management');
+    Route::post('/store', [SubjectController::class, 'store'])->name('subject_management_store');
+    Route::get('/edit', [SubjectController::class, 'edit'])->name('subject_management_edit');
+    Route::post('/update', [SubjectController::class, 'update'])->name('subject_management_update');
+    Route::post('/status', [SubjectController::class, 'status'])->name('subject_management_status');
+});
 
-Route::get('/category_management', function () {
-    return view('admin.category_management.category_management');
-})->name('category_management');
+Route::prefix('category_management')->group(function() {
+    Route::get('/', [CategoryController::class, 'index'])->name('category_management');
+    Route::post('/store', [CategoryController::class, 'store'])->name('category_management_store');
+    Route::get('/edit', [CategoryController::class, 'edit'])->name('category_management_edit');
+    Route::post('/update', [CategoryController::class, 'update'])->name('category_management_update');
+    Route::post('/status', [CategoryController::class, 'status'])->name('category_management_status');
+});
 
-Route::get('/facetoface_question', function () {
-    return view('admin.evaluation_management.facetoface_question');
-})->name('facetoface_question');
+Route::prefix('facetoface_question')->group(function() {
+    Route::get('/', [FaceToFaceQuestionController::class, 'index'])->name('facetoface_question');
+    Route::post('/store', [FaceToFaceQuestionController::class, 'store'])->name('facetoface_question_store');
+    Route::get('/edit', [FaceToFaceQuestionController::class, 'edit'])->name('facetoface_question_edit');
+    Route::post('/update', [FaceToFaceQuestionController::class, 'update'])->name('facetoface_question_update');
+    Route::post('/status', [FaceToFaceQuestionController::class, 'status'])->name('facetoface_question_status');
+});
 
-Route::get('/online_question', function () {
-    return view('admin.evaluation_management.online_question');
-})->name('online_question');
+Route::prefix('online_question')->group(function() {
+    Route::get('/', [OnlineQuestionController::class, 'index'])->name('online_question');
+    Route::post('/store', [OnlineQuestionController::class, 'store'])->name('online_question_store');
+    Route::get('/edit', [OnlineQuestionController::class, 'edit'])->name('online_question_edit');
+    Route::post('/update', [OnlineQuestionController::class, 'update'])->name('online_question_update');
+    Route::post('/status', [OnlineQuestionController::class, 'status'])->name('online_question_status');
+});
 
-Route::get('/subject_matter_question', function () {
-    return view('admin.evaluation_management.subject_matter_question');
-})->name('subject_matter_question');
+Route::prefix('subject_matter_question')->group(function() {
+    Route::get('/', [SubjectMatterQuestionController::class, 'index'])->name('subject_matter_question');
+    Route::post('/store', [SubjectMatterQuestionController::class, 'store'])->name('subject_matter_question_store');
+    Route::get('/edit', [SubjectMatterQuestionController::class, 'edit'])->name('subject_matter_question_edit');
+    Route::post('/update', [SubjectMatterQuestionController::class, 'update'])->name('subject_matter_question_update');
+    Route::post('/status', [SubjectMatterQuestionController::class, 'status'])->name('subject_matter_question_status');
+});
 
 Route::get('/evaluation_result', function () {
     return view('admin.evaluation_result.evaluation_result');

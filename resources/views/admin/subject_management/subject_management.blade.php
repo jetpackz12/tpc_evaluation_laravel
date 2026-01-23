@@ -47,34 +47,42 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>Active</td>
-                                            <td class="d-flex justify-content-center align-items-center">
-                                                <button class="btn btn-primary mr-1 editWithData"
-                                                    data-id="" data-toggle="modal"
-                                                    data-target="#modal-edit">
-                                                    <i class="fa fa-edit mr-1"></i>
-                                                    Edit
-                                                </button>
-                                                <button class="btn btn-danger editStatus" data-id=""
-                                                    data-status="" data-toggle="modal"
-                                                    data-target="#modal-delete">
-                                                    <i class="fa fa-times-circle mr-1"></i>
-                                                    Disabled
-                                                </button>
-                                                <button class="btn btn-warning editStatus"
-                                                    data-id="" data-status=""
-                                                    data-toggle="modal" data-target="#modal-delete">
-                                                    <i class="fa fa-check-circle mr-1"></i>
-                                                    Enabled
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        @foreach ($subjects as $subject)
+                                            <tr>
+                                                <td>{{ $subject->subject_code }}</td>
+                                                <td>{{ $subject->subject_name }}</td>
+                                                <td>{{ $subject->semester }}</td>
+                                                <td>{{ $subject->year_level }}</td>
+                                                <td>{{ '( ' . $subject->program_code . ' ) - ' . $subject->program_name }}
+                                                </td>
+                                                <td>{{ $subject->status == 1 ? 'Active' : 'Inactive' }}</td>
+                                                <td class="d-flex justify-content-center align-items-center">
+                                                    <button class="btn btn-primary mr-1 editWithData"
+                                                        data-id="{{ $subject->id }}" data-toggle="modal"
+                                                        data-target="#modal-edit">
+                                                        <i class="fa fa-edit mr-1"></i>
+                                                        Edit
+                                                    </button>
+                                                    @if ($subject->status == 1)
+                                                        <button class="btn btn-danger editStatus"
+                                                            data-id="{{ $subject->id }}"
+                                                            data-status="{{ $subject->status }}" data-toggle="modal"
+                                                            data-target="#modal-delete">
+                                                            <i class="fa fa-times-circle mr-1"></i>
+                                                            Disabled
+                                                        </button>
+                                                    @else
+                                                        <button class="btn btn-warning editStatus"
+                                                            data-id="{{ $subject->id }}"
+                                                            data-status="{{ $subject->status }}" data-toggle="modal"
+                                                            data-target="#modal-delete">
+                                                            <i class="fa fa-check-circle mr-1"></i>
+                                                            Enabled
+                                                        </button>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -101,7 +109,8 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="#" method="POST" class="postForm">
+                <form action="{{ route('subject_management_store') }}" method="POST" class="postForm">
+                    @csrf
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-12">
@@ -123,6 +132,9 @@
                                     <label for="exampleInputSemester">Semester</label>
                                     <select class="form-control" id="exampleInputSemester" name="semester" required>
                                         <option value="" selected disabled>---Select Semester---</option>
+                                        @foreach ($semesters as $semester)
+                                            <option value="{{ $semester->id }}">{{ $semester->description }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -131,6 +143,10 @@
                                     <label for="exampleInputYearLear">Year Level</label>
                                     <select class="form-control" id="exampleInputYearLear" name="year_level" required>
                                         <option value="" selected disabled>---Select Year Level---</option>
+                                        @foreach ($year_levels as $year_level)
+                                            <option value="{{ $year_level->id }}">{{ $year_level->description }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -139,6 +155,9 @@
                                     <label for="exampleInputProgram">Choose your Program</label>
                                     <select class="form-control" id="exampleInputProgram" name="program" required>
                                         <option value="" selected disabled>---Select Program---</option>
+                                        @foreach ($programs as $program)
+                                            <option value="{{ $program->id }}">{{ $program->program_name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -172,7 +191,8 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="#" method="POST" class="postForm">
+                <form action="{{ route('subject_management_update') }}" method="POST" class="postForm">
+                    @csrf
                     <div class="modal-body">
                         <div class="row">
                             <input type="text" class="form-control" id="e_id" name="id" hidden>
@@ -196,6 +216,9 @@
                                 <div class="form-group">
                                     <label for="e_semester">Semester</label>
                                     <select class="form-control" id="e_semester" name="semester" required>
+                                        @foreach ($semesters as $semester)
+                                            <option value="{{ $semester->id }}">{{ $semester->description }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -203,6 +226,10 @@
                                 <div class="form-group">
                                     <label for="e_year_level">Year Level</label>
                                     <select class="form-control" id="e_year_level" name="year_level" required>
+                                        @foreach ($year_levels as $year_level)
+                                            <option value="{{ $year_level->id }}">{{ $year_level->description }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -210,6 +237,9 @@
                                 <div class="form-group">
                                     <label for="e_program">Choose your Program</label>
                                     <select class="form-control" id="e_program" name="program" required>
+                                        @foreach ($programs as $program)
+                                            <option value="{{ $program->id }}">{{ $program->program_name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -238,7 +268,8 @@
                         Status
                     </h4>
                 </div>
-                <form action="#" method="POST" class="postForm">
+                <form action="{{ route('subject_management_status') }}" method="POST" class="postForm">
+                    @csrf
                     <div class="modal-body">
                         <input type="text" class="form-control id" name="id" hidden>
                         <input type="text" class="form-control status" name="status" hidden>
@@ -266,11 +297,11 @@
 
         $(document).ready(function() {
             $('.editWithData').on('click', function() {
-                const path = '';
+                const path = "{{ route('subject_management_edit') }}";
                 const id = $(this).attr('data-id');
                 $('.id').val(id);
                 $.ajax({
-                    type: "POST",
+                    type: "GET",
                     cache: false,
                     url: path,
                     data: {
@@ -280,9 +311,9 @@
 
                         const json = JSON.parse(data);
                         $('#e_id').val(json['id']);
-                        $('#e_old_subject_code').val(json['subjectCode']);
-                        $('#e_subject_code').val(json['subjectCode']);
-                        $('#e_subject_name').val(json['subjectName']);
+                        $('#e_old_subject_code').val(json['subject_code']);
+                        $('#e_subject_code').val(json['subject_code']);
+                        $('#e_subject_name').val(json['subject_name']);
                         $('#e_semester').val(json['semester_id']);
                         $('#e_year_level').val(json['year_level_id']);
                         $('#e_program').val(json['program_id']);
