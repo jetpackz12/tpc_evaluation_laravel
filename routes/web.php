@@ -8,6 +8,7 @@ use App\Http\Controllers\OnlineQuestionController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\SubjectMatterQuestionController;
+use App\Http\Controllers\TeacherController;
 
 /* Student Routes */
 
@@ -64,9 +65,13 @@ Route::get('/cancelled_account', function () {
     return view('admin.student_management.cancelled_account');
 })->name('cancelled_account');
 
-Route::get('/teacher_management', function () {
-    return view('admin.teacher_management.teacher_management');
-})->name('teacher_management');
+Route::prefix('teacher_management')->group(function() {
+    Route::get('/', [TeacherController::class, 'index'])->name('teacher_management');
+    Route::post('/store', [TeacherController::class, 'store'])->name('teacher_management_store');
+    Route::get('/edit', [TeacherController::class, 'edit'])->name('teacher_management_edit');
+    Route::post('/update', [TeacherController::class, 'update'])->name('teacher_management_update');
+    Route::post('/status', [TeacherController::class, 'status'])->name('teacher_management_status');
+});
 
 Route::prefix('program_management')->group(function() {
     Route::get('/', [ProgramController::class, 'index'])->name('program_management');

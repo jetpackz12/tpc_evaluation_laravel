@@ -26,7 +26,8 @@ class DatabaseSeeder extends Seeder
             ProgramSeeder::class,
             SemesterSeeder::class,
             CategorySeeder::class,
-            ModalitySeeder::class
+            ModalitySeeder::class,
+            TeacherSeeder::class
         ]);
     }
 }
