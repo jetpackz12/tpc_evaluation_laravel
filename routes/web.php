@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FaceToFaceQuestionController;
 use App\Http\Controllers\OnlineQuestionController;
+use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\SubjectMatterQuestionController;
 
@@ -67,9 +68,13 @@ Route::get('/teacher_management', function () {
     return view('admin.teacher_management.teacher_management');
 })->name('teacher_management');
 
-Route::get('/program_management', function () {
-    return view('admin.program_management.program_management');
-})->name('program_management');
+Route::prefix('program_management')->group(function() {
+    Route::get('/', [ProgramController::class, 'index'])->name('program_management');
+    Route::post('/store', [ProgramController::class, 'store'])->name('program_management_store');
+    Route::get('/edit', [ProgramController::class, 'edit'])->name('program_management_edit');
+    Route::post('/update', [ProgramController::class, 'update'])->name('program_management_update');
+    Route::post('/status', [ProgramController::class, 'status'])->name('program_management_status');
+});
 
 Route::prefix('subject_management')->group(function() {
     Route::get('/', [SubjectController::class, 'index'])->name('subject_management');

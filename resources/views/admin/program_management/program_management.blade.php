@@ -44,31 +44,38 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td>Active</td>
-                                            <td class="d-flex justify-content-center align-items-center">
-                                                <button class="btn btn-primary mr-1 editWithData"
-                                                    data-id="" data-toggle="modal"
-                                                    data-target="#modal-edit">
-                                                    <i class="fa fa-edit mr-1"></i>
-                                                    Edit
-                                                </button>
-                                                <button class="btn btn-danger editStatus" data-id=""
-                                                    data-status="" data-toggle="modal"
-                                                    data-target="#modal-delete">
-                                                    <i class="fa fa-times-circle mr-1"></i>
-                                                    Disabled
-                                                </button>
-                                                <button class="btn btn-warning editStatus" data-id=""
-                                                    data-status="" data-toggle="modal"
-                                                    data-target="#modal-delete">
-                                                    <i class="fa fa-check-circle mr-1"></i>
-                                                    Enabled
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        @foreach ($programs as $program)
+                                            <tr>
+                                                <td>{{ $program->program_code }}</td>
+                                                <td>{{ $program->program_name }}</td>
+                                                <td>{{ $program->status == 1 ? 'Active' : 'Inactive' }}</td>
+                                                <td class="d-flex justify-content-center align-items-center">
+                                                    <button class="btn btn-primary mr-1 editWithData"
+                                                        data-id="{{ $program->id }}" data-toggle="modal"
+                                                        data-target="#modal-edit">
+                                                        <i class="fa fa-edit mr-1"></i>
+                                                        Edit
+                                                    </button>
+                                                    @if ($program->status == 1)
+                                                        <button class="btn btn-danger editStatus"
+                                                            data-id="{{ $program->id }}"
+                                                            data-status="{{ $program->status }}" data-toggle="modal"
+                                                            data-target="#modal-delete">
+                                                            <i class="fa fa-times-circle mr-1"></i>
+                                                            Disabled
+                                                        </button>
+                                                    @else
+                                                        <button class="btn btn-warning editStatus"
+                                                            data-id="{{ $program->id }}"
+                                                            data-status="{{ $program->status }}" data-toggle="modal"
+                                                            data-target="#modal-delete">
+                                                            <i class="fa fa-check-circle mr-1"></i>
+                                                            Enabled
+                                                        </button>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -95,7 +102,8 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="#" method="POST" class="postForm">
+                <form action="{{ route('program_management_store') }}" method="POST" class="postForm">
+                    @csrf
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-12">
@@ -142,7 +150,8 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="#" method="POST" class="postForm">
+                <form action="{{ route('program_management_update') }}" method="POST" class="postForm">
+                    @csrf
                     <div class="modal-body">
                         <div class="row">
                             <input type="text" class="form-control" id="e_id" name="id" hidden>
@@ -187,7 +196,8 @@
                         Status
                     </h4>
                 </div>
-                <form action="#" method="POST" class="postForm">
+                <form action="{{ route('program_management_status') }}" method="POST" class="postForm">
+                    @csrf
                     <div class="modal-body">
                         <input type="text" class="form-control id" name="id" hidden>
                         <input type="text" class="form-control status" name="status" hidden>
@@ -215,11 +225,11 @@
 
         $(document).ready(function() {
             $('.editWithData').on('click', function() {
-                const path = '';
+                const path = "{{ route('program_management_edit') }}";
                 const id = $(this).attr('data-id');
                 $('.id').val(id);
                 $.ajax({
-                    type: "POST",
+                    type: "GET",
                     cache: false,
                     url: path,
                     data: {
