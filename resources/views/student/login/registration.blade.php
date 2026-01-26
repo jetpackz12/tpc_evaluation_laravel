@@ -63,7 +63,8 @@
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form action="#" id="frm" method="POST">
+                <form action="{{ route('student_management_store') }}" id="frm" method="POST">
+                    @csrf
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4 col-12">
@@ -91,6 +92,9 @@
                                     <label for="exampleInputProgramname">Program Name</label>
                                     <select class="form-control" id="exampleInputProgramname" name="program" required>
                                         <option value="" selected disabled>--- Program Name ---</option>
+                                        @foreach ($programs as $program)
+                                            <option value="{{ $program->id }}">{{ $program->program_name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -99,6 +103,9 @@
                                     <label for="exampleInputYearlevel">Year Level</label>
                                     <select class="form-control" id="exampleInputYearlevel" name="year_level" required>
                                         <option value="" selected disabled>--- Year Level ---</option>
+                                        @foreach ($year_levels as $year_level)
+                                            <option value="{{ $year_level->id }}">{{ $year_level->description }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -107,6 +114,9 @@
                                     <label for="exampleInputStatus">Status</label>
                                     <select class="form-control" id="exampleInputStatus" name="status" required>
                                         <option value="" selected disabled>--- Status ---</option>
+                                        @foreach ($student_status as $student_stat)
+                                            <option value="{{ $student_stat->id }}">{{ $student_stat->description }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>

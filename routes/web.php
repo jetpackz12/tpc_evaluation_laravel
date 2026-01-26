@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FaceToFaceQuestionController;
 use App\Http\Controllers\OnlineQuestionController;
 use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\SubjectMatterQuestionController;
 use App\Http\Controllers\TeacherController;
@@ -16,9 +17,10 @@ Route::get('/', function () {
     return view('student.login.login');
 })->name('login');
 
-Route::get('/registration', function () {
-    return view('student.login.registration');
-})->name('registration');
+Route::prefix('registration')->group(function () {
+    Route::get('/', [StudentController::class, 'index'])->name('registration');
+    Route::post('/store', [StudentController::class, 'store'])->name('student_management_store');
+});
 
 Route::get('/student_dashboard', function () {
     return view('student.dashboard.dashboard');
