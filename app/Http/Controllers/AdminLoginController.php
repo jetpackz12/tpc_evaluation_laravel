@@ -30,9 +30,6 @@ class AdminLoginController extends Controller
 
             Auth::login($user);
             $request->session()->regenerate();
-            Session::put(['name' => $user->name]);
-            Session::put(['username' => $user->username]);
-            Session::put(['usertype' => 'admin']);
 
             $data = json_encode([
                 'response' => '1',

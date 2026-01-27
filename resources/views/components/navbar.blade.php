@@ -9,7 +9,7 @@
 
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
-    <span class="text-lg text-white">Welcome: <strong><i>#</i></strong></span>
+    <span class="text-lg text-white">Welcome: <strong><i>{{ Auth::user()->name }}</i></strong></span>
   </ul>
 </nav>
 <!-- /.navbar -->

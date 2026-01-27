@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
             'name' => 'Admin',
             'username' => 'admin',
             'password' => 'admin',
+            'role' => 1
         ]);
     }
 }
