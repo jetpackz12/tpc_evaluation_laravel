@@ -38,37 +38,40 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="icheck-primary">
-                                                    <input type="checkbox" class="cb-input" name="cbInputVal[]"
-                                                        id="checkbox" value="">
-                                                    <label for="checkbox">
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="d-flex justify-content-center align-items-center">
-                                                <form action="#" class="postForm">
-                                                    <input type="text" class="form-control" name="id"
-                                                        value="" hidden>
-                                                    <button type="submit"
-                                                        class="btn btn-primary mr-0 mr-sm-1 mb-1 mb-sm-0">
-                                                        <i class="fa fa-check mr-1"></i>
-                                                        Approved
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger edit" data-id=""
-                                                        data-toggle="modal" data-target="#modal-cancel">
-                                                        <i class="fa fa-times mr-1"></i>
-                                                        Cancel
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
+                                        @foreach ($students as $student)
+                                            <tr>
+                                                <td>
+                                                    <div class="icheck-primary">
+                                                        <input type="checkbox" class="cb-input" name="cbInputVal[]"
+                                                            id="checkbox" value="{{ $student->id }}">
+                                                        <label for="checkbox">
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td>{{ $student->id }}</td>
+                                                <td>{{ $student->last_name }}</td>
+                                                <td>{{ $student->first_name }}</td>
+                                                <td>{{ $student->middle_name }}</td>
+                                                <td>{{ $student->username }}</td>
+                                                <td class="d-flex justify-content-center align-items-center">
+                                                    <form action="{{ route('pending_account_update_approved') }}" class="postForm">
+                                                        @csrf
+                                                        <input type="text" class="form-control" name="id"
+                                                            value="{{ $student->id }}" hidden>
+                                                        <button type="submit"
+                                                            class="btn btn-primary mr-0 mr-sm-1 mb-1 mb-sm-0">
+                                                            <i class="fa fa-check mr-1"></i>
+                                                            Approved
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger edit" data-id="{{ $student->id }}"
+                                                            data-toggle="modal" data-target="#modal-cancel">
+                                                            <i class="fa fa-times mr-1"></i>
+                                                            Cancel
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -92,7 +95,8 @@
                         Cancel information
                     </h4>
                 </div>
-                <form action="#" method="POST" class="postForm">
+                <form action="{{ route('pending_account_update_cancel') }}" method="POST" class="postForm">
+                    @csrf
                     <div class="modal-body">
                         <p class="text-lg">Please provide the reason for canceling this student's account.</p>
                         <input type="text" class="form-control id" name="id" hidden>
@@ -127,7 +131,7 @@
         const tableTitle = "List of Student Pending Accounts";
         const pagination = false;
         const loadingStatus = false;
-        const ACCOUNT_STATUS = 1;
+        const ACCOUNT_STATUS = 2;
 
         let inputCheckBoxCounter = 0;
 
@@ -173,16 +177,24 @@
                 $('.cb-input:checked').each(function() {
                     selectedIds.push($(this).val());
                 });
+                        console.log(selectedIds);
+                        console.log(ACCOUNT_STATUS);
 
                 $.ajax({
                     type: "POST",
                     cache: false,
-                    url: "",
+                    url: "{{ route('account_update_all') }}",
                     data: {
                         selectedData: selectedIds,
                         status: ACCOUNT_STATUS
                     },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     success: function(data) {
+
+                        console.log(data);
+                        
 
                         const jsonData = JSON.parse(data);
 

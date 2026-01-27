@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId("year_level_id");
             $table->foreignId("student_status_id");
             $table->smallInteger("status");
+            $table->text("cancel_reason")->nullable();
             $table->timestamps();
         });
     }

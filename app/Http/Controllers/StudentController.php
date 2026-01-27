@@ -18,6 +18,9 @@ class StudentController extends Controller
     private $DISABLED = '0';
     private $ENABLED = '1';
     private $RULE_STUDENT = 2;
+    private $PENDING = 1;
+    private $APPROVED = 2;
+    private $CANCELLED = 3;
     /**
      * Display a listing of the resource.
      */
@@ -64,15 +67,15 @@ class StudentController extends Controller
             $student->program_id = $request->program;
             $student->year_level_id = $request->year_level;
             $student->student_status_id = $request->status;
-            $student->status = $this->ENABLED;
+            $student->status = $this->PENDING;
             $student->save();
-            
+
             $data = json_encode([
                 'response' => $this->SUCCESS_RESPONSE,
                 'message' => "Success, You have successfully registered your account."
             ]);
         }
-        
+
         return $data;
     }
 
@@ -95,14 +98,13 @@ class StudentController extends Controller
                 'message' => "Success, You have successfully logged in to your account."
             ]);
         } else {
-             $data = json_encode([
+            $data = json_encode([
                 'response' => $this->FAILED_RESPONSE,
                 'message' => "Failed, Username or password is invalid."
             ]);
         }
 
         return $data;
-
     }
 
     /**
@@ -130,7 +132,7 @@ class StudentController extends Controller
     }
 
     /**
-     * Admin logout.
+     * Student logout.
      */
     public function logout(Request $request)
     {
@@ -139,5 +141,80 @@ class StudentController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+
+    /**
+     * Pending account
+     */
+    public function pendingAccount()
+    {
+
+        $render_data = [
+            'students' => Student::join('users', 'students.user_id', 'users.id')
+                ->select('students.*', 'users.username')
+                ->where('status', $this->PENDING)
+                ->get()
+        ];
+
+        return view('admin.student_management.pending_account', $render_data);
+    }
+
+
+    /**
+     * Pending account update approved
+     */
+    public function pendingAccountUpdateApproved(Request $request)
+    {
+        $data = array();
+
+        $student = Student::find($request->id);
+        $student->status = $this->APPROVED;
+        $student->save();
+
+        $data = json_encode([
+            'response' => $this->SUCCESS_RESPONSE,
+            'message' => "Success, You have successfully approved student account."
+        ]);
+
+        return $data;
+    }
+
+
+    /**
+     * Pending account update cancelled
+     */
+    public function pendingAccountUpdateCancel(Request $request)
+    {
+        $data = array();
+
+        $student = Student::find($request->id);
+        $student->status = $this->CANCELLED;
+        $student->cancel_reason = $request->reason;
+        $student->save();
+
+        $data = json_encode([
+            'response' => $this->SUCCESS_RESPONSE,
+            'message' => "Success, You have successfully cancelled student account."
+        ]);
+
+        return $data;
+    }
+
+    /**
+     *  Account update all
+     */
+    public function accountUpdateAll(Request $request)
+    {
+        $data = array();
+
+        Student::whereIn('id', $request->selectedData)->update(['status' => $request->status]);
+
+        $data = json_encode([
+            'response' => $this->SUCCESS_RESPONSE,
+            'message' => "Success, You have successfully approved all student accounts."
+        ]);
+
+        return $data;
     }
 }
