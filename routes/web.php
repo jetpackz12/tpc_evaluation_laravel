@@ -61,6 +61,8 @@ Route::middleware('AdminAuth')->get('/pending_account', [StudentController::clas
 
 Route::middleware('AdminAuth')->get('/approved_account', [StudentController::class, 'approvedAccount'])->name('approved_account');
 
+Route::middleware('AdminAuth')->get('/cancelled_account', [StudentController::class, 'cancelledAccount'])->name('cancelled_account');
+
 Route::middleware('AdminAuth')->prefix('account_update')->group(function() {
     Route::post('/account_update_approved', [StudentController::class, 'accountUpdateApproved'])->name('account_update_approved');
     Route::post('/account_update_cancel', [StudentController::class, 'accountUpdateCancel'])->name('account_update_cancel');

@@ -177,6 +177,24 @@ class StudentController extends Controller
         return view('admin.student_management.approved_account', $render_data);
     }
 
+
+    /**
+     * Cancelled account
+     */
+    public function cancelledAccount()
+    {
+
+        $render_data = [
+            'students' => Student::join('users', 'students.user_id', 'users.id')
+                ->select('students.*', 'users.username')
+                ->where('status', $this->CANCELLED)
+                ->get()
+        ];
+
+        return view('admin.student_management.cancelled_account', $render_data);
+    }
+
+
     /**
      * Pending account update approved
      */

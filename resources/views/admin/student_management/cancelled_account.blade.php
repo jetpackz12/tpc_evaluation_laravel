@@ -15,10 +15,6 @@
                                         <i class="fa fa-spell-check"></i>
                                         Approved All
                                     </button>
-                                    <button class="btn btn-info" id="btn-pending-all" disabled>
-                                        <i class="fa fa-spell-check"></i>
-                                        Pending All
-                                    </button>
                                 </div>
                             </div>
                             <!-- /.card-header -->
@@ -45,45 +41,36 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="icheck-primary">
-                                                    <input type="checkbox" class="cb-input" name="cbInputVal[]"
-                                                        id="checkbox" value="">
-                                                    <label for="checkbox">
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="d-flex justify-content-center align-items-center">
-                                                <form
-                                                    action="#"
-                                                    class="postForm">
-                                                    <input type="text" class="form-control" name="id"
-                                                        value="" hidden>
-                                                    <button type="submit"
-                                                        class="btn btn-primary mr-0 mr-sm-1 mb-1 mb-sm-0">
-                                                        <i class="fa fa-check mr-1"></i>
-                                                        Approved
-                                                    </button>
-                                                </form>
-                                                <form
-                                                    action="#"
-                                                    class="postForm">
-                                                    <input type="text" class="form-control" name="id"
-                                                        value="" hidden>
-                                                    <button type="submit" class="btn btn-info">
-                                                        <i class="fa fa-hourglass-half mr-1"></i>
-                                                        Pending
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
+                                        @foreach ($students as $student)
+                                            <tr>
+                                                <td>
+                                                    <div class="icheck-primary">
+                                                        <input type="checkbox" class="cb-input" name="cbInputVal[]"
+                                                            id="checkbox{{ $student->id }}" value="{{ $student->id }}">
+                                                        <label for="checkbox{{ $student->id }}">
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td>{{ $student->id }}</td>
+                                                <td>{{ $student->last_name }}</td>
+                                                <td>{{ $student->first_name }}</td>
+                                                <td>{{ $student->middle_name }}</td>
+                                                <td>{{ $student->username }}</td>
+                                                <td>{{ $student->cancel_reason }}</td>
+                                                <td class="d-flex justify-content-center align-items-center">
+                                                    <form action="{{ route('account_update_approved') }}" class="postForm">
+                                                        @csrf
+                                                        <input type="text" class="form-control" name="id"
+                                                            value="{{ $student->id }}" hidden>
+                                                        <button type="submit"
+                                                            class="btn btn-primary mr-0 mr-sm-1 mb-1 mb-sm-0">
+                                                            <i class="fa fa-check mr-1"></i>
+                                                            Approved
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -105,6 +92,7 @@
         //This will be the title of the table when using the table tools like Excel, PDF, and Print.
         const tableTitle = "List of Student Cancelled Accounts";
         const pagination = false;
+        const loadingStatus = false;
 
         let inputCheckBoxCounter = 0;
 
@@ -169,6 +157,9 @@
                         selectedData: selectedIds,
                         status: account_status
                     },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     success: function(data) {
 
                         const jsonData = JSON.parse(data);
@@ -201,14 +192,8 @@
             }
 
             $('#btn-approved-all').click(function() {
-                const ACCOUNT_STATUS = 1;
-                approvedAllAndPendingAll("",
-                    ACCOUNT_STATUS);
-            });
-
-            $('#btn-pending-all').click(function() {
                 const ACCOUNT_STATUS = 2;
-                approvedAllAndPendingAll("",
+                approvedAllAndPendingAll("{{ route('account_update_all') }}",
                     ACCOUNT_STATUS);
             });
         });
