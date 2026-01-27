@@ -43,8 +43,8 @@
                                                 <td>
                                                     <div class="icheck-primary">
                                                         <input type="checkbox" class="cb-input" name="cbInputVal[]"
-                                                            id="checkbox" value="{{ $student->id }}">
-                                                        <label for="checkbox">
+                                                            id="checkbox{{ $student->id }}" value="{{ $student->id }}">
+                                                        <label for="checkbox{{ $student->id }}">
                                                         </label>
                                                     </div>
                                                 </td>
@@ -54,7 +54,7 @@
                                                 <td>{{ $student->middle_name }}</td>
                                                 <td>{{ $student->username }}</td>
                                                 <td class="d-flex justify-content-center align-items-center">
-                                                    <form action="{{ route('pending_account_update_approved') }}" class="postForm">
+                                                    <form action="{{ route('account_update_approved') }}" class="postForm">
                                                         @csrf
                                                         <input type="text" class="form-control" name="id"
                                                             value="{{ $student->id }}" hidden>
@@ -95,7 +95,7 @@
                         Cancel information
                     </h4>
                 </div>
-                <form action="{{ route('pending_account_update_cancel') }}" method="POST" class="postForm">
+                <form action="{{ route('account_update_cancel') }}" method="POST" class="postForm">
                     @csrf
                     <div class="modal-body">
                         <p class="text-lg">Please provide the reason for canceling this student's account.</p>
@@ -177,8 +177,6 @@
                 $('.cb-input:checked').each(function() {
                     selectedIds.push($(this).val());
                 });
-                        console.log(selectedIds);
-                        console.log(ACCOUNT_STATUS);
 
                 $.ajax({
                     type: "POST",
@@ -192,9 +190,6 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(data) {
-
-                        console.log(data);
-                        
 
                         const jsonData = JSON.parse(data);
 
