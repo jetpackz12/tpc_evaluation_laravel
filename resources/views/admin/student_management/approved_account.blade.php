@@ -10,9 +10,9 @@
                             <div class="card-header">
                                 <h3 class="card-title"><span class="d-none d-sm-inline">List of </span>Approved Accounts
                                 </h3>
-                                <button class="btn btn-info float-right" id="btn-pending-all" disabled>
+                                <button class="btn btn-danger float-right" id="btn-pending-all" disabled>
                                     <i class="fa fa-spell-check"></i>
-                                    Pending All
+                                    Cancel All
                                 </button>
                             </div>
                             <!-- /.card-header -->
@@ -38,39 +38,30 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="icheck-primary">
-                                                    <input type="checkbox" class="cb-input" name="cbInputVal[]"
-                                                        id="checkbox" value="">
-                                                    <label for="checkbox">
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="d-flex justify-content-center align-items-center">
-                                                <form action="#"
-                                                    class="postForm">
-                                                    <input type="text" class="form-control" name="id"
-                                                        value="" hidden>
-                                                    <button type="submit"
-                                                        class="btn btn-info mr-0 mr-sm-1 mb-1 mb-sm-0">
-                                                        <i class="fa fa-hourglass-half mr-1"></i>
-                                                        Pending
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger edit"
-                                                        data-id="" data-toggle="modal"
-                                                        data-target="#modal-cancel">
+                                        @foreach ($students as $student)
+                                            <tr>
+                                                <td>
+                                                    <div class="icheck-primary">
+                                                        <input type="checkbox" class="cb-input" name="cbInputVal[]"
+                                                            id="checkbox{{ $student->id }}" value="{{ $student->id }}">
+                                                        <label for="checkbox{{ $student->id }}">
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td>{{ $student->id }}</td>
+                                                <td>{{ $student->last_name }}</td>
+                                                <td>{{ $student->first_name }}</td>
+                                                <td>{{ $student->middle_name }}</td>
+                                                <td>{{ $student->username }}</td>
+                                                <td class="d-flex justify-content-center align-items-center">
+                                                    <button type="button" class="btn btn-danger edit" data-id="{{ $student->id }}"
+                                                        data-toggle="modal" data-target="#modal-cancel">
                                                         <i class="fa fa-times mr-1"></i>
                                                         Cancel
                                                     </button>
-                                                </form>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -84,6 +75,43 @@
         <!-- /.content -->
     </div>
 
+    <!-- Cancel Modal -->
+    <div class="modal fade" id="modal-cancel">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger">
+                    <h4 class="modal-title">
+                        <i class="fa fa-exclamation-circle mr-1" style="font-size: 25px;"></i>
+                        Cancel information
+                    </h4>
+                </div>
+                <form action="{{ route('account_update_cancel') }}" method="POST" class="postForm">
+                    @csrf
+                    <div class="modal-body">
+                        <p class="text-lg">Please provide the reason for canceling this student's account.</p>
+                        <input type="text" class="form-control id" name="id" hidden>
+                        <!-- textarea -->
+                        <div class="form-group">
+                            <textarea class="form-control" rows="5" name="reason" placeholder="Enter reason..." required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" style="width: 100px;">
+                            <i class="fa fa-arrow-circle-left mr-1"></i>Cancel
+                        </button>
+                        <button type="submit" class="btn btn-danger" style="width: 100px;">
+                            <i class="fa fa-paper-plane mr-1"></i>
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
     <script>
         $("#studentManagement").addClass("menu-open");
         $("#studentManagementLink").addClass("active");
@@ -93,7 +121,7 @@
         const tableTitle = "List of Student Approved Accounts";
         const pagination = false;
         const loadingStatus = false;
-        const ACCOUNT_STATUS = 2;
+        const ACCOUNT_STATUS = 3;
 
         let inputCheckBoxCounter = 0;
 
@@ -143,10 +171,13 @@
                 $.ajax({
                     type: "POST",
                     cache: false,
-                    url: "",
+                    url: "{{ route('account_update_all') }}",
                     data: {
                         selectedData: selectedIds,
                         status: ACCOUNT_STATUS
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(data) {
 

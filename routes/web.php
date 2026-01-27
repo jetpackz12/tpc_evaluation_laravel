@@ -57,20 +57,15 @@ Route::middleware('AdminAuth')->get('/admin_dashboard', function () {
     return view('admin.dashboard.dashboard');
 })->name('admin_dashboard');
 
-Route::middleware('AdminAuth')->prefix('pending_account')->group(function() {
-    Route::get('/', [StudentController::class, 'pendingAccount'])->name('pending_account');
-    Route::post('/update_approved', [StudentController::class, 'pendingAccountUpdateApproved'])->name('pending_account_update_approved');
-    Route::post('/update_cancel', [StudentController::class, 'pendingAccountUpdateCancel'])->name('pending_account_update_cancel');
+Route::middleware('AdminAuth')->get('/pending_account', [StudentController::class, 'pendingAccount'])->name('pending_account');
+
+Route::middleware('AdminAuth')->get('/approved_account', [StudentController::class, 'approvedAccount'])->name('approved_account');
+
+Route::middleware('AdminAuth')->prefix('account_update')->group(function() {
+    Route::post('/account_update_approved', [StudentController::class, 'accountUpdateApproved'])->name('account_update_approved');
+    Route::post('/account_update_cancel', [StudentController::class, 'accountUpdateCancel'])->name('account_update_cancel');
     Route::post('/update_all', [StudentController::class, 'accountUpdateAll'])->name('account_update_all');
 });
-
-Route::middleware('AdminAuth')->get('/approved_account', function () {
-    return view('admin.student_management.approved_account');
-})->name('approved_account');
-
-Route::middleware('AdminAuth')->get('/cancelled_account', function () {
-    return view('admin.student_management.cancelled_account');
-})->name('cancelled_account');
 
 Route::middleware('AdminAuth')->prefix('teacher_management')->group(function() {
     Route::get('/', [TeacherController::class, 'index'])->name('teacher_management');

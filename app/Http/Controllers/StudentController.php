@@ -162,9 +162,25 @@ class StudentController extends Controller
 
 
     /**
+     * Approved account
+     */
+    public function approvedAccount()
+    {
+
+        $render_data = [
+            'students' => Student::join('users', 'students.user_id', 'users.id')
+                ->select('students.*', 'users.username')
+                ->where('status', $this->APPROVED)
+                ->get()
+        ];
+
+        return view('admin.student_management.approved_account', $render_data);
+    }
+
+    /**
      * Pending account update approved
      */
-    public function pendingAccountUpdateApproved(Request $request)
+    public function accountUpdateApproved(Request $request)
     {
         $data = array();
 
@@ -184,7 +200,7 @@ class StudentController extends Controller
     /**
      * Pending account update cancelled
      */
-    public function pendingAccountUpdateCancel(Request $request)
+    public function accountUpdateCancel(Request $request)
     {
         $data = array();
 
