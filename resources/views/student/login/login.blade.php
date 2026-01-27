@@ -58,7 +58,8 @@
 
       <div class="card-body login-card-body rounded-lg">
       <h4 class="login-box-msg">Student Login</h4>
-        <form action="#" id="frm" method="POST">
+        <form action="{{ route('student_management_show') }}" id="frm" method="POST">
+          @csrf
           <div class="input-group mb-3">
             <input type="number" class="form-control" name="identification" placeholder="Student Identification" required>
             <div class="input-group-append">
@@ -137,7 +138,7 @@
                   title: `<p class="text-center pt-2 text-black"> ${jsonData['message']} </p>`
                 });
                 setTimeout(function() {
-                    window.location.href = "{{ route('login') }}";
+                    window.location.href = "{{ route('student_dashboard') }}";
                 }, 1500);
               break;
 

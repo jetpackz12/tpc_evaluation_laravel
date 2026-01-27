@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Program;
 use App\Models\Student;
 use App\Models\StudentStatus;
+use App\Models\User;
 use App\Models\YearLevel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
@@ -37,23 +39,30 @@ class StudentController extends Controller
     {
         $data = array();
 
-        $student = Student::where("student_identification", $request->student_identification)->first();
+        $user = User::where("username", $request->student_identification)->first();
 
-        if ($student) {
+        if ($user) {
             $data = json_encode([
                 'response' => $this->FAILED_RESPONSE,
                 'message' => "Failed, This student identification has already been used."
             ]);
         } else {
+
+            $user = new User();
+            $user->name = "$request->firstname $request->middlename $request->lastname";
+            $user->username = $request->student_identification;
+            $user->password = $request->password;
+            $user->role = 2;
+            $user->save();
+
             $student = new Student();
+            $student->user_id = $user->id;
             $student->last_name = $request->lastname;
             $student->first_name = $request->firstname;
             $student->middle_name = $request->middlename;
             $student->program_id = $request->program;
             $student->year_level_id = $request->year_level;
             $student->student_status_id = $request->status;
-            $student->student_identification = $request->student_identification;
-            $student->password = Hash::make($request->password);
             $student->status = $this->ENABLED;
             $student->save();
             
@@ -69,9 +78,30 @@ class StudentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(student $student)
+    public function show(Request $request)
     {
-        //
+        $data = array();
+
+        $user = User::where("username", $request->identification)->first();
+
+        if ($user && Hash::check($request->password, $user->password)) {
+
+            Auth::login($user);
+            $request->session()->regenerate();
+
+            $data = json_encode([
+                'response' => $this->SUCCESS_RESPONSE,
+                'message' => "Success, You have successfully logged in to your account."
+            ]);
+        } else {
+             $data = json_encode([
+                'response' => $this->FAILED_RESPONSE,
+                'message' => "Failed, Username or password is invalid."
+            ]);
+        }
+
+        return $data;
+
     }
 
     /**
@@ -96,5 +126,17 @@ class StudentController extends Controller
     public function destroy(student $student)
     {
         //
+    }
+
+    /**
+     * Admin logout.
+     */
+    public function logout(Request $request)
+    {
+        auth()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 }

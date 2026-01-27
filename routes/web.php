@@ -20,6 +20,8 @@ Route::get('/', function () {
 Route::prefix('registration')->group(function () {
     Route::get('/', [StudentController::class, 'index'])->name('registration');
     Route::post('/store', [StudentController::class, 'store'])->name('student_management_store');
+    Route::post('/show', [StudentController::class, 'show'])->name('student_management_show');
+    Route::post('/logout', [StudentController::class, 'logout'])->name('logout');
 });
 
 Route::get('/student_dashboard', function () {
@@ -51,23 +53,23 @@ Route::prefix('admin_loginx')->group(function () {
     Route::post('/logoutx', [AdminLoginController::class, 'logout'])->name('logoutx');
 });
 
-Route::get('/admin_dashboard', function () {
+Route::middleware('AdminAuth')->get('/admin_dashboard', function () {
     return view('admin.dashboard.dashboard');
 })->name('admin_dashboard');
 
-Route::get('/pending_account', function () {
+Route::middleware('AdminAuth')->get('/pending_account', function () {
     return view('admin.student_management.pending_account');
 })->name('pending_account');
 
-Route::get('/approved_account', function () {
+Route::middleware('AdminAuth')->get('/approved_account', function () {
     return view('admin.student_management.approved_account');
 })->name('approved_account');
 
-Route::get('/cancelled_account', function () {
+Route::middleware('AdminAuth')->get('/cancelled_account', function () {
     return view('admin.student_management.cancelled_account');
 })->name('cancelled_account');
 
-Route::prefix('teacher_management')->group(function() {
+Route::middleware('AdminAuth')->prefix('teacher_management')->group(function() {
     Route::get('/', [TeacherController::class, 'index'])->name('teacher_management');
     Route::post('/store', [TeacherController::class, 'store'])->name('teacher_management_store');
     Route::get('/edit', [TeacherController::class, 'edit'])->name('teacher_management_edit');
@@ -75,7 +77,7 @@ Route::prefix('teacher_management')->group(function() {
     Route::post('/status', [TeacherController::class, 'status'])->name('teacher_management_status');
 });
 
-Route::prefix('program_management')->group(function() {
+Route::middleware('AdminAuth')->prefix('program_management')->group(function() {
     Route::get('/', [ProgramController::class, 'index'])->name('program_management');
     Route::post('/store', [ProgramController::class, 'store'])->name('program_management_store');
     Route::get('/edit', [ProgramController::class, 'edit'])->name('program_management_edit');
@@ -83,7 +85,7 @@ Route::prefix('program_management')->group(function() {
     Route::post('/status', [ProgramController::class, 'status'])->name('program_management_status');
 });
 
-Route::prefix('subject_management')->group(function() {
+Route::middleware('AdminAuth')->prefix('subject_management')->group(function() {
     Route::get('/', [SubjectController::class, 'index'])->name('subject_management');
     Route::post('/store', [SubjectController::class, 'store'])->name('subject_management_store');
     Route::get('/edit', [SubjectController::class, 'edit'])->name('subject_management_edit');
@@ -91,7 +93,7 @@ Route::prefix('subject_management')->group(function() {
     Route::post('/status', [SubjectController::class, 'status'])->name('subject_management_status');
 });
 
-Route::prefix('category_management')->group(function() {
+Route::middleware('AdminAuth')->prefix('category_management')->group(function() {
     Route::get('/', [CategoryController::class, 'index'])->name('category_management');
     Route::post('/store', [CategoryController::class, 'store'])->name('category_management_store');
     Route::get('/edit', [CategoryController::class, 'edit'])->name('category_management_edit');
@@ -99,7 +101,7 @@ Route::prefix('category_management')->group(function() {
     Route::post('/status', [CategoryController::class, 'status'])->name('category_management_status');
 });
 
-Route::prefix('facetoface_question')->group(function() {
+Route::middleware('AdminAuth')->prefix('facetoface_question')->group(function() {
     Route::get('/', [FaceToFaceQuestionController::class, 'index'])->name('facetoface_question');
     Route::post('/store', [FaceToFaceQuestionController::class, 'store'])->name('facetoface_question_store');
     Route::get('/edit', [FaceToFaceQuestionController::class, 'edit'])->name('facetoface_question_edit');
@@ -107,7 +109,7 @@ Route::prefix('facetoface_question')->group(function() {
     Route::post('/status', [FaceToFaceQuestionController::class, 'status'])->name('facetoface_question_status');
 });
 
-Route::prefix('online_question')->group(function() {
+Route::middleware('AdminAuth')->prefix('online_question')->group(function() {
     Route::get('/', [OnlineQuestionController::class, 'index'])->name('online_question');
     Route::post('/store', [OnlineQuestionController::class, 'store'])->name('online_question_store');
     Route::get('/edit', [OnlineQuestionController::class, 'edit'])->name('online_question_edit');
@@ -115,7 +117,7 @@ Route::prefix('online_question')->group(function() {
     Route::post('/status', [OnlineQuestionController::class, 'status'])->name('online_question_status');
 });
 
-Route::prefix('subject_matter_question')->group(function() {
+Route::middleware('AdminAuth')->prefix('subject_matter_question')->group(function() {
     Route::get('/', [SubjectMatterQuestionController::class, 'index'])->name('subject_matter_question');
     Route::post('/store', [SubjectMatterQuestionController::class, 'store'])->name('subject_matter_question_store');
     Route::get('/edit', [SubjectMatterQuestionController::class, 'edit'])->name('subject_matter_question_edit');
@@ -123,6 +125,6 @@ Route::prefix('subject_matter_question')->group(function() {
     Route::post('/status', [SubjectMatterQuestionController::class, 'status'])->name('subject_matter_question_status');
 });
 
-Route::get('/evaluation_result', function () {
+Route::middleware('AdminAuth')->get('/evaluation_result', function () {
     return view('admin.evaluation_result.evaluation_result');
 })->name('evaluation_result');

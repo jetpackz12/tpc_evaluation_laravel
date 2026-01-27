@@ -72,7 +72,8 @@
            Logout
          </h4>
        </div>
-       <form action="#" method="POST">
+       <form action="{{ route('logout') }}" method="POST">
+        @csrf
         <div class="modal-body">
           <p class="text-danger text-lg">Are your sure you want to log out?</p>
         </div>

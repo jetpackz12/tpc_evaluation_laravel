@@ -22,8 +22,6 @@ class StudentSeeder extends Seeder
             'program_id' => 1,
             'year_level_id' => 1,
             'student_status_id' => 1,
-            'student_identification' => "xxxxxx",
-            'password' => Hash::make("123456"),
             'status' => 1
         ]);
     }
