@@ -24,23 +24,23 @@ Route::prefix('registration')->group(function () {
     Route::post('/logout', [StudentController::class, 'logout'])->name('logout');
 });
 
-Route::get('/student_dashboard', function () {
+Route::middleware('StudentAuth')->get('/student_dashboard', function () {
     return view('student.dashboard.dashboard');
 })->name('student_dashboard');
 
-Route::get('/student_evaluation', function () {
+Route::middleware('StudentAuth')->get('/student_evaluation', function () {
     return view('student.evaluation.evaluation');
 })->name('student_evaluation');
 
-Route::get('/student_evaluation_form', function () {
+Route::middleware('StudentAuth')->get('/student_evaluation_form', function () {
     return view('student.evaluation.evaluation_form');
 })->name('student_evaluation_form');
 
-Route::get('/student_history', function () {
+Route::middleware('StudentAuth')->get('/student_history', function () {
     return view('student.history.history');
 })->name('student_history');
 
-Route::get('/student_profile', function () {
+Route::middleware('StudentAuth')->get('/student_profile', function () {
     return view('student.profile.profile');
 })->name('student_profile');
 

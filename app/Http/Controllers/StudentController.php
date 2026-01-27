@@ -17,6 +17,7 @@ class StudentController extends Controller
     private $FAILED_RESPONSE = '0';
     private $DISABLED = '0';
     private $ENABLED = '1';
+    private $RULE_STUDENT = 2;
     /**
      * Display a listing of the resource.
      */
@@ -52,7 +53,7 @@ class StudentController extends Controller
             $user->name = "$request->firstname $request->middlename $request->lastname";
             $user->username = $request->student_identification;
             $user->password = $request->password;
-            $user->role = 2;
+            $user->role = $this->RULE_STUDENT;
             $user->save();
 
             $student = new Student();
