@@ -10,10 +10,14 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item text-md"><a class="nav-text" href="{{ route('student_dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item text-md"><a class="nav-text" href="{{ route('student_evaluation') }}">Evaluation</a></li>
-                            <li class="breadcrumb-item text-md"><a class="nav-text" href="{{ route('student_history') }}">History</a></li>
-                            <li class="breadcrumb-item text-md"><a href="{{ route('student_profile') }}">Profile</a></li>
+                            <li class="breadcrumb-item text-md"><a class="nav-text"
+                                    href="{{ route('student_dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item text-md"><a class="nav-text"
+                                    href="{{ route('student_evaluation') }}">Evaluation</a></li>
+                            <li class="breadcrumb-item text-md"><a class="nav-text"
+                                    href="{{ route('student_history') }}">History</a></li>
+                            <li class="breadcrumb-item text-md"><a href="{{ route('student_profile') }}">Profile</a>
+                            </li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -36,33 +40,40 @@
                             </div>
                             <!-- /.card-header -->
                             <!-- form start -->
-                            <form action="#" method="POST" class="postForm">
+                            <form action="{{ route('student_profile_update') }}" method="POST" class="postForm">
+                                @csrf
                                 <div class="card-body">
                                     <div class="row">
-                                        <input type="text" class="form-control" id="e_id" name="id" hidden>
+                                        <input type="text" class="form-control" id="e_id_user" name="id_user"
+                                            value="{{ $student->user_id }}" hidden>
+                                        <input type="text" class="form-control" id="e_id_student" name="id_student"
+                                            value="{{ $student->id }}" hidden>
                                         <input type="text" class="form-control" id="e_old_password"
-                                            name="old_password" hidden>
+                                            name="old_password" value="{{ $student->password }}" hidden>
                                         <input type="text" class="form-control" id="e_old_student_identification"
-                                            name="old_student_identification" hidden>
+                                            name="old_student_identification" value="{{ $student->username }}" hidden>
                                         <div class="col-md-4 col-12">
                                             <div class="form-group">
                                                 <label for="e_lastname">Lastname</label>
                                                 <input type="text" class="form-control input-info" id="e_lastname"
-                                                    name="lastname" placeholder="Enter Lastname" disabled required>
+                                                    name="lastname" placeholder="Enter Lastname"
+                                                    value="{{ $student->last_name }}" disabled required>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-12">
                                             <div class="form-group">
                                                 <label for="e_firstname">Firstname</label>
                                                 <input type="text" class="form-control input-info" id="e_firstname"
-                                                    name="firstname" placeholder="Enter Firstname" disabled required>
+                                                    name="firstname" placeholder="Enter Firstname"
+                                                    value="{{ $student->first_name }}" disabled required>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-12">
                                             <div class="form-group">
                                                 <label for="e_middlename">Middlename</label>
                                                 <input type="text" class="form-control input-info" id="e_middlename"
-                                                    name="middlename" placeholder="Enter Middlename" disabled required>
+                                                    name="middlename" placeholder="Enter Middlename"
+                                                    value="{{ $student->middle_name }}" disabled required>
                                             </div>
                                         </div>
                                     </div>
@@ -72,6 +83,12 @@
                                                 <label for="e_program_name">Program Name</label>
                                                 <select class="form-control input-info" id="e_program_name"
                                                     name="program" disabled required>
+                                                    @foreach ($programs as $program)
+                                                        <option value="{{ $program->id }}"
+                                                            {{ $program->id == $student->program_id ? 'selected' : '' }}>
+                                                            {{ $program->program_name }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -80,6 +97,12 @@
                                                 <label for="e_year_level">Year Level</label>
                                                 <select class="form-control input-info" id="e_year_level"
                                                     name="year_level" disabled required>
+                                                    @foreach ($year_levels as $year_level)
+                                                        <option value="{{ $year_level->id }}"
+                                                            {{ $year_level->id == $student->year_level_id ? 'selected' : '' }}>
+                                                            {{ $year_level->description }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -88,6 +111,12 @@
                                                 <label for="e_status">Status</label>
                                                 <select class="form-control input-info" id="e_status" name="status"
                                                     disabled required>
+                                                    @foreach ($status as $stat)
+                                                        <option value="{{ $stat->id }}"
+                                                            {{ $stat->id == $student->student_status_id ? 'selected' : '' }}>
+                                                            {{ $stat->description }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -98,7 +127,8 @@
                                                 <label for="e_student_identification">Student Identification</label>
                                                 <input type="number" class="form-control input-info"
                                                     id="e_student_identification" name="student_identification"
-                                                    placeholder="Enter Student Identification" disabled required>
+                                                    placeholder="Enter Student Identification"
+                                                    value="{{ $student->username }}" disabled required>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-12">
@@ -106,8 +136,8 @@
                                                 <label for="e_password">Password</label>
                                                 <div class="input-group">
                                                     <input type="password" class="form-control" id="e_password"
-                                                        name="password" placeholder="Enter Password" disabled
-                                                        required>
+                                                        name="password" placeholder="Enter Password"
+                                                        value="{{ $student->password }}" disabled required>
                                                     <div class="input-group-append">
                                                         <button type="button"
                                                             class="btn btn-warning btn-edit-password" disabled>
@@ -152,7 +182,7 @@
     </div>
 
     <script>
-        let password = '';
+        let password = '{{ $student->password }}';
 
         $("#profile").addClass("active");
         $(".edit").click(function() {
@@ -187,37 +217,5 @@
                 $(".btn-edit-password .fa-times-circle").attr("hidden", "hidden");
             }
         });
-
-
-        // $(document).ready(function() {
-        //     const path = '';
-        //     const id = "";
-
-        //     $.ajax({
-        //         type: "POST",
-        //         cache: false,
-        //         url: path,
-        //         data: {
-        //             id: id
-        //         },
-        //         success: function(data) {
-
-        //             const json = JSON.parse(data);
-        //             $('#e_id').val(json['id']);
-        //             $('#e_old_password').val(json['password']);
-        //             $('#e_old_student_identification').val(json['studentId']);
-        //             $('#e_lastname').val(json['lastname']);
-        //             $('#e_firstname').val(json['firstname']);
-        //             $('#e_middlename').val(json['middlename']);
-        //             $('#e_program_name').val(json['program_id']);
-        //             $('#e_year_level').val(json['year_level_id']);
-        //             $('#e_status').val(json['student_status_id']);
-        //             $('#e_student_identification').val(json['studentId']);
-        //             $('#e_password').val(json['password']);
-        //             password = json['password'];
-
-        //         }
-        //     });
-        // });
     </script>
 </x-layout>

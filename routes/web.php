@@ -7,6 +7,7 @@ use App\Http\Controllers\FaceToFaceQuestionController;
 use App\Http\Controllers\OnlineQuestionController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StudentProfileController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\SubjectMatterQuestionController;
 use App\Http\Controllers\TeacherController;
@@ -40,10 +41,11 @@ Route::middleware('StudentAuth')->get('/student_history', function () {
     return view('student.history.history');
 })->name('student_history');
 
-Route::middleware('StudentAuth')->get('/student_profile', function () {
-    return view('student.profile.profile');
-})->name('student_profile');
 
+Route::middleware('StudentAuth')->prefix('student_profile')->group(function(){
+    Route::get('/', [StudentProfileController::class, 'index'])->name('student_profile');
+    Route::post('/update', [StudentProfileController::class, 'update'])->name('student_profile_update');
+});
 
 /* Admin Routes */
 
