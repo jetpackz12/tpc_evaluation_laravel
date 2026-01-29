@@ -80,7 +80,7 @@ class TeacherController extends Controller
     {
         $data = array();
 
-        if ($request->e_old_id_num != $request->id_num) {
+        if ($request->old_teacher_identification != $request->id_num) {
 
             $teacher = Teacher::where('id_num', $request->id_num)->first();
 
