@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FaceToFaceQuestionController;
 use App\Http\Controllers\OnlineQuestionController;
 use App\Http\Controllers\ProgramController;
@@ -55,9 +56,7 @@ Route::prefix('admin_loginx')->group(function () {
     Route::post('/logoutx', [AdminLoginController::class, 'logout'])->name('logoutx');
 });
 
-Route::middleware('AdminAuth')->get('/admin_dashboard', function () {
-    return view('admin.dashboard.dashboard');
-})->name('admin_dashboard');
+Route::middleware('AdminAuth')->get('/admin_dashboard', [DashboardController::class, 'index'])->name('admin_dashboard');
 
 Route::middleware('AdminAuth')->get('/pending_account', [StudentController::class, 'pendingAccount'])->name('pending_account');
 

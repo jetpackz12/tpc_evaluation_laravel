@@ -24,7 +24,7 @@
                             <!-- small box -->
                             <div class="small-box bg-primary">
                                 <div class="inner">
-                                    <h3>150</h3>
+                                    <h3>{{ $student_pendings }}</h3>
 
                                     <p>Student Pending Account</p>
                                 </div>
@@ -40,7 +40,7 @@
                             <!-- small box -->
                             <div class="small-box bg-info">
                                 <div class="inner">
-                                    <h3>150</h3>
+                                    <h3>{{ $student_approveds }}</h3>
 
                                     <p>Student Approved Account</p>
                                 </div>
@@ -56,7 +56,7 @@
                             <!-- small box -->
                             <div class="small-box bg-danger">
                                 <div class="inner">
-                                    <h3>150</h3>
+                                    <h3>{{ $student_cancelleds }}</h3>
 
                                     <p>Student Cancelled Account</p>
                                 </div>
@@ -75,7 +75,7 @@
                             <!-- small box -->
                             <div class="small-box bg-success">
                                 <div class="inner">
-                                    <h3>150</h3>
+                                    <h3>{{ $teachers }}</h3>
 
                                     <p>Teacher</p>
                                 </div>
@@ -93,7 +93,7 @@
                             <!-- small box -->
                             <div class="small-box bg-primary">
                                 <div class="inner">
-                                    <h3>150</h3>
+                                    <h3>{{ $programs }}</h3>
 
                                     <p>Program</p>
                                 </div>
@@ -109,7 +109,7 @@
                             <!-- small box -->
                             <div class="small-box bg-info">
                                 <div class="inner">
-                                    <h3>150</h3>
+                                    <h3>{{ $subjects }}</h3>
 
                                     <p>Subject</p>
                                 </div>
@@ -125,7 +125,7 @@
                             <!-- small box -->
                             <div class="small-box bg-danger">
                                 <div class="inner">
-                                    <h3>150</h3>
+                                    <h3>{{ $categories }}</h3>
 
                                     <p>Category</p>
                                 </div>
@@ -143,7 +143,7 @@
                             <!-- small box -->
                             <div class="small-box bg-success">
                                 <div class="inner">
-                                    <h3>150</h3>
+                                    <h3>{{ $face_to_faces_questions }}</h3>
 
                                     <p>Face to Face Question</p>
                                 </div>
@@ -159,7 +159,7 @@
                             <!-- small box -->
                             <div class="small-box bg-success">
                                 <div class="inner">
-                                    <h3>150</h3>
+                                    <h3>{{ $online_questions }}</h3>
 
                                     <p>Online Question</p>
                                 </div>
@@ -177,7 +177,7 @@
                             <!-- small box -->
                             <div class="small-box bg-primary">
                                 <div class="inner">
-                                    <h3>150</h3>
+                                    <h3>xxxx</h3>
 
                                     <p>Evaluation Result</p>
                                 </div>
