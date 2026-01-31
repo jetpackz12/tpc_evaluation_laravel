@@ -132,4 +132,8 @@ Route::middleware('AdminAuth')->prefix('subject_matter_question')->group(functio
     Route::post('/status', [SubjectMatterQuestionController::class, 'status'])->name('subject_matter_question_status');
 });
 
-Route::middleware('AdminAuth')->get('/evaluation_result', [EvaluationController::class, 'index'])->name('evaluation_result');
+Route::middleware('AdminAuth')->prefix('evaluation_result')->group(function() {
+    Route::get('/', [EvaluationController::class, 'index'])->name('evaluation_result');
+    Route::post('/show', [EvaluationController::class, 'show'])->name('evaluation_result_show');
+    Route::post('/show_evaluation', [EvaluationController::class, 'showEvaluation'])->name('evaluation_result_show_evaluation');
+});

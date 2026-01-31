@@ -10,7 +10,8 @@
                         <div class="card">
                             <!-- form start -->
                             <!-- <form action="#"> -->
-                            <form action="#" method="POST" id="filter">
+                            <form action="{{ route('evaluation_result_show') }}" method="POST" id="filter">
+                                @csrf
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-4 col-12">
@@ -20,6 +21,10 @@
                                                     <option value="" selected disabled>---Select Program---
                                                     </option>
                                                     <option value="0">All Program</option>
+                                                    @foreach ($programs as $program)
+                                                        <option value="{{ $program->id }}">{{ $program->program_name }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -38,6 +43,10 @@
                                                     required>
                                                     <option value="" selected disabled>---Select Semester----
                                                     </option>
+                                                    @foreach ($semesters as $semester)
+                                                        <option value="{{ $semester->id }}">{{ $semester->description }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -136,27 +145,35 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-12">
-                                            <table id="table" class="table table-bordered">
-                                                <thead>
-                                                    <tr class="bg-success">
-                                                        <th>
-                                                           #
-                                                        </th>
-                                                        <th class="text-center">
-                                                            Rating
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td class="w-25">
-                                                            <input type="text" class="form-control text-center face"
-                                                                id="face" disabled>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            @foreach ($categories as $category)
+                                                <table id="table" class="table table-bordered">
+                                                    <thead>
+                                                        <tr class="bg-success">
+                                                            <th>
+                                                                {{ $category->category_name }}
+                                                            </th>
+                                                            <th class="text-center">
+                                                                Rating
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($face_to_face_questions as $face_to_face_question)
+                                                            @if ($category->id == $face_to_face_question->category_id)
+                                                                <tr>
+                                                                    <td>{{ $face_to_face_question->question }}</td>
+                                                                    <td class="w-25">
+                                                                        <input type="text"
+                                                                            class="form-control text-center face"
+                                                                            id="face{{ $face_to_face_question->id }}"
+                                                                            disabled>
+                                                                    </td>
+                                                                </tr>
+                                                            @endif
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -176,28 +193,35 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-12">
-                                            <table id="table" class="table table-bordered">
-                                                <thead>
-                                                    <tr class="bg-success">
-                                                        <th>
-                                                            #
-                                                        </th>
-                                                        <th class="text-center">
-                                                            Rating
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td class="w-25">
-                                                            <input type="text"
-                                                                class="form-control text-center online"
-                                                                id="online" disabled>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            @foreach ($categories as $category)
+                                                <table id="table" class="table table-bordered">
+                                                    <thead>
+                                                        <tr class="bg-success">
+                                                            <th>
+                                                                {{ $category->category_name }}
+                                                            </th>
+                                                            <th class="text-center">
+                                                                Rating
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($online_questions as $online_question)
+                                                            @if ($category->id == $online_question->category_id)
+                                                                <tr>
+                                                                    <td>{{ $online_question->question }}</td>
+                                                                    <td class="w-25">
+                                                                        <input type="text"
+                                                                            class="form-control text-center online"
+                                                                            id="online{{ $online_question->id }}"
+                                                                            disabled>
+                                                                    </td>
+                                                                </tr>
+                                                            @endif
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -217,12 +241,16 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label>Question : </label>
-                                                <div class="rounded p-3" style="background-color: #E9ECEF;">
-                                                    <span class="matter" id="matter"></span>
+                                            @foreach ($subject_matter_questions as $subject_matter_question)
+                                                <div class="form-group">
+                                                    <label>Question:
+                                                        {{ $subject_matter_question->question }}</label>
+                                                    <div class="rounded p-3" style="background-color: #E9ECEF;">
+                                                        <span class="matter"
+                                                            id="matter{{ $subject_matter_question->id }}"></span>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -283,9 +311,12 @@
                     cache: false,
                     url: $(this).attr('action'),
                     data: $(this).serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     success: function(data) {
 
-                        // console.log(data);
+                        console.log(data);
 
                         const jsonData = JSON.parse(data);
 
@@ -295,7 +326,7 @@
                             let status = element.status == 1 ? 'Active' : 'Inactive';
 
                             $('#teacherEvaluationTable').append(`<tr>
-                                                <td>${element.teacherLastname} ${element.teacherFirstname} ${element.teacherMiddlename}.</td>
+                                                <td>${element.lastname} ${element.firstname} ${element.middlename}.</td>
                                                 <td>( ${element.program_code} ) - ${element.program_name}</td>
                                                 <td>${status}</td>
                                                 <td class="d-flex justify-content-center align-items-center">
@@ -315,7 +346,7 @@
             });
 
             $('#teacherEvaluationTable').on('click', '.edit', function() {
-                const path = '';
+                const path = "{{ route('evaluation_result_show_evaluation') }}";
                 const id = $(this).attr('data-id');
                 const academic_year = $('#sel-acadimic-year').val();
                 const semester = $('#sel-semester').val();
@@ -329,35 +360,39 @@
                         academic_year: academic_year,
                         semester: semester,
                     },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     success: function(data) {
-
-                        $('#exampleInputInstructorName').val($('#sel-program option:selected')
-                            .text());
-                        $('#exampleInputAcadamicYear').val(academic_year);
-                        $('#exampleInputSemester').val($('#sel-semester option:selected')
-                        .text());
 
                         console.log(data);
 
                         const jsonData = JSON.parse(data);
+                        const teacher_name = jsonData.teacher.firstname + " " + jsonData.teacher.middlename + " " + jsonData.teacher.lastname;
 
-                        if (jsonData.length < 1) {
+                        $('#exampleInputInstructorName').val(teacher_name);
+                        $('#exampleInputAcadamicYear').val(academic_year);
+                        $('#exampleInputSemester').val($('#sel-semester option:selected')
+                            .text());
+
+                        if (jsonData.evaluations.length < 1 && jsonData.subject_matters.length < 1) {
                             $('.face').val('No Evaluation');
                             $('.online').val('No Evaluation');
                             $('.matter').text('No Evaluation');
                         } else {
-                            for (let i = 0; i < jsonData.length; i++) {
-                                const element = jsonData[i];
-                                if (element.modality_id == 1 && element.rate != '') {
+                            jsonData.evaluations.forEach(element => {
+                                if (element.modality_id == 1 && element.rate !== '') {
                                     $(`#face${element.question_id}`).val(element.rate);
-                                } else if (element.modality_id == 2 && element.rate != '') {
-                                    $(`#online${element.question_id}`).val(element.rate);
                                 } else {
-                                    $(`#matter${element.subject_matter_question_id}`).text(
-                                        element.response);
-
+                                    $(`#online${element.question_id}`).val(element
+                                    .rate);
                                 }
-                            }
+                            });
+
+                            jsonData.subject_matters.forEach(element => {
+                                $(`#matter${element.subject_matter_question_id}`).text(
+                                    element.response);
+                            });
                         }
 
 
