@@ -37,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('view_evaluation_face_to_faces');
+        DB::statement("DROP VIEW IF EXISTS view_evaluation_face_to_faces");
     }
 };
