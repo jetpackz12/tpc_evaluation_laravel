@@ -9,7 +9,9 @@ use App\Models\SubjectMatter;
 use App\Models\OnlineQuestion;
 use App\Models\ViewEvaluation;
 use App\Models\FaceToFaceQuestion;
+use App\Models\Student;
 use App\Models\SubjectMatterQuestion;
+use Illuminate\Support\Facades\Auth;
 
 class HistoryController extends Controller
 {
@@ -55,14 +57,16 @@ class HistoryController extends Controller
      */
     public function show(Request $request)
     {
-        // dd($request);
+        $student = Student::where('user_id', '=', Auth::user()->id)->first();
 
         $data = [
-            'evaluations' => ViewEvaluation::where('teacher_id', '=', $request->teacher_id)
+            'evaluations' => ViewEvaluation::where('student_id', '=', $student->id)
+                ->where('teacher_id', '=', $request->teacher_id)
                 ->where('academic_year', '=', $request->academic_year)
                 ->where('semester_id', '=', $request->semester)
                 ->get(),
-            'subject_matters' => SubjectMatter::where('teacher_id', '=', $request->teacher_id)
+            'subject_matters' => SubjectMatter::where('student_id', '=', $student->id)
+                ->where('teacher_id', '=', $request->teacher_id)
                 ->where('semester_id', '=', $request->semester)
                 ->where('academic_year', '=', $request->academic_year)
                 ->select('subject_matters.*', 'subject_matters.id AS subject_matter_id')
