@@ -40,7 +40,8 @@
                             </div>
                             <!-- /.card-header -->
                             <!-- form start -->
-                            <form action="#" method="POST" id="filter">
+                            <form action="{{ route('student_history_show') }}" method="POST" id="filter">
+                                @csrf
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-4 col-12">
@@ -50,6 +51,10 @@
                                                     required>
                                                     <option value="" disabled selected>---Select Instructor---
                                                     </option>
+                                                    @foreach ($teachers as $teacher)
+                                                        <option value="{{ $teacher->id }}"> {{ $teacher->firstname }}
+                                                            {{ $teacher->middlename }}{{ $teacher->lastname }} </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -103,27 +108,35 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
-                                        <table id="table" class="table table-bordered">
-                                            <thead>
-                                                <tr class="bg-success">
-                                                    <th>
-                                                        #
-                                                    </th>
-                                                    <th class="text-center">
-                                                        Rating
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td></td>
-                                                    <td class="w-25">
-                                                        <input type="text" class="form-control text-center face"
-                                                            id="face" disabled>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        @foreach ($categories as $category)
+                                            <table id="table" class="table table-bordered">
+                                                <thead>
+                                                    <tr class="bg-success">
+                                                        <th>
+                                                            {{ $category->category_name }}
+                                                        </th>
+                                                        <th class="text-center">
+                                                            Rating
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($face_to_face_questions as $face_to_face_question)
+                                                        @if ($category->id == $face_to_face_question->category_id)
+                                                            <tr>
+                                                                <td>{{ $face_to_face_question->question }}</td>
+                                                                <td class="w-25">
+                                                                    <input type="text"
+                                                                        class="form-control text-center face"
+                                                                        id="face{{ $face_to_face_question->id }}"
+                                                                        disabled>
+                                                                </td>
+                                                            </tr>
+                                                        @endif
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
@@ -143,27 +156,34 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
-                                        <table id="table" class="table table-bordered">
-                                            <thead>
-                                                <tr class="bg-success">
-                                                    <th>
-                                                        #
-                                                    </th>
-                                                    <th class="text-center">
-                                                        Rating
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td></td>
-                                                    <td class="w-25">
-                                                        <input type="text" class="form-control text-center online"
-                                                            id="online" disabled>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        @foreach ($categories as $category)
+                                            <table id="table" class="table table-bordered">
+                                                <thead>
+                                                    <tr class="bg-success">
+                                                        <th>
+                                                            {{ $category->category_name }}
+                                                        </th>
+                                                        <th class="text-center">
+                                                            Rating
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($online_questions as $online_question)
+                                                        @if ($category->id == $online_question->category_id)
+                                                            <tr>
+                                                                <td>{{ $online_question->question }}</td>
+                                                                <td class="w-25">
+                                                                    <input type="text"
+                                                                        class="form-control text-center online"
+                                                                        id="online{{ $online_question->id }}" disabled>
+                                                                </td>
+                                                            </tr>
+                                                        @endif
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
@@ -183,12 +203,16 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Question : </label>
-                                            <div class="rounded p-3" style="background-color: #E9ECEF;">
-                                                <span class="matter" id="matter"></span>
+                                        @foreach ($subject_matter_questions as $subject_matter_question)
+                                            <div class="form-group">
+                                                <label>Question:
+                                                    {{ $subject_matter_question->question }}</label>
+                                                <div class="rounded p-3" style="background-color: #E9ECEF;">
+                                                    <span class="matter"
+                                                        id="matter{{ $subject_matter_question->id }}"></span>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
@@ -229,38 +253,51 @@
                 $('#display-history').addClass("d-none");
             });
 
+            $('#exampleInputAcademicyear').change(function() {
+                $('.face').val('No evaluation');
+                $('.online').val('No evaluation');
+                $('.matter').text('No evaluation');
+                $('#display-history').removeClass("d-block");
+                $('#display-history').addClass("d-none");
+            });
+
+            $('#sel-semester').change(function() {
+                $('.face').val('No evaluation');
+                $('.online').val('No evaluation');
+                $('.matter').text('No evaluation');
+                $('#display-history').removeClass("d-block");
+                $('#display-history').addClass("d-none");
+            });
+
             $('#filter').on('submit', function(e) {
                 e.preventDefault();
 
                 $('#display-history').removeClass("d-none");
                 $('#display-history').addClass("d-block");
 
-                // $.ajax({
-                //     type: "POST",
-                //     cache: false,
-                //     url: $(this).attr('action'),
-                //     data: $(this).serialize(),
-                //     success: function(data) {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function(data) {
 
-                //         const jsonData = JSON.parse(data);
+                        const jsonData = JSON.parse(data);
 
-                //         console.log(jsonData);
+                        jsonData.evaluations.forEach(element => {
+                            if (element.modality_id == 1 && element.rate !== '') {
+                                $(`#face${element.question_id}`).val(element.rate);
+                            } else {
+                                $(`#online${element.question_id}`).val(element.rate);
+                            }
+                        });
 
-                //         for (let i = 0; i < jsonData.length; i++) {
-                //             const element = jsonData[i];
-                //             if (element.modality_id == 1 && element.rate != '') {
-                //                 $(`#face${element.question_id}`).val(element.rate);
-                //             } else if (element.modality_id == 2 && element.rate != '') {
-                //                 $(`#online${element.question_id}`).val(element.rate);
-                //             } else {
-                //                 $(`#matter${element.subject_matter_question_id}`).text(element
-                //                     .response);
-
-                //             }
-                //         }
-
-                //     }
-                // });
+                        jsonData.subject_matters.forEach(element => {
+                            $(`#matter${element.subject_matter_question_id}`).text(
+                                element.response);
+                        });
+                    }
+                });
             });
         });
     </script>

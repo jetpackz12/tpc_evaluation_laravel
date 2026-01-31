@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\FaceToFaceQuestionController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\OnlineQuestionController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\StudentController;
@@ -44,9 +45,10 @@ Route::middleware('StudentAuth')->get('/student_evaluation_form', function () {
     return view('student.evaluation.evaluation_form');
 })->name('student_evaluation_form');
 
-Route::middleware('StudentAuth')->get('/student_history', function () {
-    return view('student.history.history');
-})->name('student_history');
+Route::middleware('StudentAuth')->prefix('student_history')->group(function() {
+    Route::get('/', [HistoryController::class, 'index'])->name('student_history');
+    Route::post('/show', [HistoryController::class, 'show'])->name('student_history_show');
+});
 
 
 Route::middleware('StudentAuth')->prefix('student_profile')->group(function(){
