@@ -26,7 +26,7 @@ return new class extends Migration
             INNER JOIN semesters AS e ON a.semester_id = e.id
             INNER JOIN modalities AS f ON a.modality_id = f.id
             INNER JOIN categories AS g ON a.category_id = g.id
-            INNER JOIN face_to_face_questions AS h ON a.question_id = h.id
+            INNER JOIN online_questions AS h ON a.question_id = h.id
             WHERE a.modality_id = 2
             ORDER BY a.id ;
         ");
