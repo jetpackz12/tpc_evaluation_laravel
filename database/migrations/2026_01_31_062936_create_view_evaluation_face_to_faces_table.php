@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         DB::statement("
-            CREATE VIEW `view_evaluation_face_to_faces` AS SELECT a.id, a.academic_year, CONCAT(b.last_name, ' ', b.first_name, ' ', b.middle_name) AS student_name, 
+            CREATE VIEW `view_evaluation_face_to_faces` AS SELECT a.id, a.student_id, a.academic_year, CONCAT(b.last_name, ' ', b.first_name, ' ', b.middle_name) AS student_name, 
             sa.id AS program_id, sa.program_code, sa.program_name, sb.description AS year_level, sc.description AS student_status,
             sd.description AS account_status, c.id AS teacher_id, CONCAT(c.lastname, ' ', c.firstname, ' ', c.middlename) AS teacher_name,
             a.subject_id, e.id AS semester_id, e.description AS semester, f.modality, g.category_name, h.category_id, h.modality_id, h.id AS question_id, h.question, a.rate, a.created_at
