@@ -4,10 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\FaceToFaceQuestionController;
 use App\Http\Controllers\OnlineQuestionController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StudentEvaluationController;
 use App\Http\Controllers\StudentProfileController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\SubjectMatterQuestionController;
@@ -30,9 +32,13 @@ Route::middleware('StudentAuth')->get('/student_dashboard', function () {
     return view('student.dashboard.dashboard');
 })->name('student_dashboard');
 
-Route::middleware('StudentAuth')->get('/student_evaluation', function () {
-    return view('student.evaluation.evaluation');
-})->name('student_evaluation');
+Route::middleware('StudentAuth')->prefix('student_evaluation')->group( function() {
+    Route::get('/', [StudentEvaluationController::class, 'index'])->name('student_evaluation');
+    Route::get('/get_instructor', [StudentEvaluationController::class, 'getInstructor'])->name('student_evaluation_get_instructor');
+    Route::get('/get_subject', [StudentEvaluationController::class, 'getSubject'])->name('student_evaluation_get_subject');
+    Route::post('/edit', [StudentEvaluationController::class, 'edit'])->name('student_evaluation_edit');
+    Route::post('/store', [StudentEvaluationController::class, 'store'])->name('student_evaluation_store');
+});
 
 Route::middleware('StudentAuth')->get('/student_evaluation_form', function () {
     return view('student.evaluation.evaluation_form');
@@ -126,6 +132,4 @@ Route::middleware('AdminAuth')->prefix('subject_matter_question')->group(functio
     Route::post('/status', [SubjectMatterQuestionController::class, 'status'])->name('subject_matter_question_status');
 });
 
-Route::middleware('AdminAuth')->get('/evaluation_result', function () {
-    return view('admin.evaluation_result.evaluation_result');
-})->name('evaluation_result');
+Route::middleware('AdminAuth')->get('/evaluation_result', [EvaluationController::class, 'index'])->name('evaluation_result');

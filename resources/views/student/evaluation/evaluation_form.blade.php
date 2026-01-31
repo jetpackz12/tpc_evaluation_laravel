@@ -67,37 +67,46 @@
                                         </div>
                                     </div>
                                     <div class="bs-stepper-content">
-                                        <form action="#" method="POST" class="postForm">
+                                        <form action="{{ route('student_evaluation_store') }}" method="POST"
+                                            class="postForm">
+                                            @csrf
                                             <!-- your steps content here -->
                                             <div id="stepper1" class="content" role="tabpanel"
                                                 aria-labelledby="stepper1-trigger">
                                                 <h2 class="text-center">Face to Face Instruction</h2>
-                                                <table id="table" class="table table-bordered">
-                                                    <thead>
-                                                        <tr class="bg-success">
-                                                            <th>
-                                                                Classroom Managements
-                                                            </th>
-                                                            <th class="text-center">
-                                                                Rating
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Establishes rapport with students</td>
-                                                            <td class="w-25">
-                                                                <select class="form-control" name="faceToFace[]">
-                                                                    <option value="1">1</option>
-                                                                    <option value="2">2</option>
-                                                                    <option value="3">3</option>
-                                                                    <option value="4">4</option>
-                                                                    <option value="5">5</option>
-                                                                </select>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                                @foreach ($categories as $category)
+                                                    <table id="table" class="table table-bordered">
+                                                        <thead>
+                                                            <tr class="bg-success">
+                                                                <th>
+                                                                    {{ $category->category_name }}
+                                                                </th>
+                                                                <th class="text-center">
+                                                                    Rating
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($face_to_face_questions as $face_to_face_question)
+                                                                @if ($category->id == $face_to_face_question->category_id)
+                                                                    <tr>
+                                                                        <td>{{ $face_to_face_question->question }}</td>
+                                                                        <td class="w-25">
+                                                                            <select class="form-control"
+                                                                                name="faceToFace[]">
+                                                                                <option value="1|{{ $face_to_face_question->category_id }}|{{ $face_to_face_question->modality_id }}|{{ $face_to_face_question->id }}">1</option>
+                                                                                <option value="2|{{ $face_to_face_question->category_id }}|{{ $face_to_face_question->modality_id }}|{{ $face_to_face_question->id }}">2</option>
+                                                                                <option value="3|{{ $face_to_face_question->category_id }}|{{ $face_to_face_question->modality_id }}|{{ $face_to_face_question->id }}">3</option>
+                                                                                <option value="4|{{ $face_to_face_question->category_id }}|{{ $face_to_face_question->modality_id }}|{{ $face_to_face_question->id }}">4</option>
+                                                                                <option value="5|{{ $face_to_face_question->category_id }}|{{ $face_to_face_question->modality_id }}|{{ $face_to_face_question->id }}">5</option>
+                                                                            </select>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endif
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                @endforeach
                                                 <div class="d-flex justify-content-center align-content-center mb-2">
                                                     <button class="btn btn-primary" onclick="stepper.next()"
                                                         type="button">
@@ -109,32 +118,39 @@
                                             <div id="stepper2" class="content" role="tabpanel"
                                                 aria-labelledby="stepper2-trigger">
                                                 <h2 class="text-center">Online Instruction</h2>
-                                                <table id="table" class="table table-bordered">
-                                                    <thead>
-                                                        <tr class="bg-success">
-                                                            <th>
-                                                                Classroom Managements
-                                                            </th>
-                                                            <th class="text-center">
-                                                                Rating
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <td>Organization and accessibility of online course material
-                                                        </td>
-                                                        <td class="w-25">
-                                                            <select class="form-control" name="online[]">
-                                                                <option value="1">1</option>
-                                                                <option value="2">2</option>
-                                                                <option value="3">3</option>
-                                                                <option value="4">4</option>
-                                                                <option value="5">5</option>
-                                                            </select>
-                                                        </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                                @foreach ($categories as $category)
+                                                    <table id="table" class="table table-bordered">
+                                                        <thead>
+                                                            <tr class="bg-success">
+                                                                <th>
+                                                                    {{ $category->category_name }}
+                                                                </th>
+                                                                <th class="text-center">
+                                                                    Rating
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($online_questions as $online_question)
+                                                                @if ($category->id == $online_question->category_id)
+                                                                    <tr>
+                                                                        <td>{{ $online_question->question }}</td>
+                                                                        <td class="w-25">
+                                                                            <select class="form-control"
+                                                                                name="online[]">
+                                                                                <option value="1|{{ $online_question->category_id }}|{{ $online_question->modality_id }}|{{ $online_question->id }}">1</option>
+                                                                                <option value="2|{{ $online_question->category_id }}|{{ $online_question->modality_id }}|{{ $online_question->id }}">2</option>
+                                                                                <option value="3|{{ $online_question->category_id }}|{{ $online_question->modality_id }}|{{ $online_question->id }}">3</option>
+                                                                                <option value="4|{{ $online_question->category_id }}|{{ $online_question->modality_id }}|{{ $online_question->id }}">4</option>
+                                                                                <option value="5|{{ $online_question->category_id }}|{{ $online_question->modality_id }}|{{ $online_question->id }}">5</option>
+                                                                            </select>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endif
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                @endforeach
                                                 <div class="d-flex justify-content-center align-content-center mb-2">
                                                     <button class="btn btn-primary mr-2" onclick="stepper.previous()"
                                                         type="button">
@@ -153,12 +169,15 @@
                                                 <h2 class="text-center my-2">Knowledge of the Subject Matter</h2>
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <input class="form-control" type="text"
-                                                            name="knowledge_id[]" value="" hidden>
-                                                        <div class="form-group">
-                                                            <label>Question:</label>
-                                                            <textarea class="form-control" name="question[]" rows="2" required></textarea>
-                                                        </div>
+                                                        @foreach ($subject_matter_questions as $subject_matter_question)
+                                                            <input class="form-control" type="text"
+                                                                name="knowledge_id[]" value="{{ $subject_matter_question->id }}" hidden>
+                                                            <div class="form-group">
+                                                                <label>Question:
+                                                                    {{ $subject_matter_question->question }}</label>
+                                                                <textarea class="form-control" name="question[]" rows="2" required></textarea>
+                                                            </div>
+                                                        @endforeach
                                                     </div>
                                                 </div>
                                                 <div class="d-flex justify-content-center align-content-center mb-2">

@@ -39,7 +39,8 @@
                             </div>
                             <!-- /.card-header -->
                             <!-- form start -->
-                            <form action="#" method="POST" class="postForm">
+                            <form action="{{ route('student_evaluation_edit') }}" method="POST" class="postForm">
+                                @csrf
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-3 col-12">
@@ -48,6 +49,9 @@
                                                 <select class="form-control" id="sel-program" name="program" required>
                                                     <option value="" selected disabled>---Select Program---
                                                     </option>
+                                                    @foreach ($programs as $program)
+                                                        <option value="{{ $program->id }}">{{ $program->program_name }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -68,26 +72,29 @@
                                                     required>
                                                     <option value="" selected disabled>---Select Semester----
                                                     </option>
+                                                    @foreach ($semesters as $semester)
+                                                        <option value="{{ $semester->id }}">{{ $semester->description }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-3 col-12">
                                             <div class="form-group">
-                                                <label>Subject</label>
-                                                <select class="select2bs4" id="sel-sub" name="subjects[]"
-                                                    multiple="multiple" data-placeholder="--Select Subject--"
-                                                    style="width: 100%;" disabled required>
-                                                </select>
+                                                <label for="exampleInputAcademicyear">Academic Year</label>
+                                                <input type="text" class="form-control" id="exampleInputAcademicyear"
+                                                    name="academic_year" data-inputmask='"mask": "9999-9999"' data-mask
+                                                    placeholder="YYYY-YYYY" required>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12 col-12">
                                             <div class="form-group">
-                                                <label for="exampleInputAcademicyear">Academic Year</label>
-                                                <input type="text" class="form-control" id="exampleInputAcademicyear"
-                                                    name="academic_year" data-inputmask='"mask": "9999-9999"' data-mask
-                                                    placeholder="YYYY-YYYY" required>
+                                                <label>Subject</label>
+                                                <select class="select2bs4" id="sel-sub" name="subjects[]"
+                                                    multiple="multiple" data-placeholder="--Select Subject--"
+                                                    style="width: 100%;" disabled required>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -120,83 +127,86 @@
         //Input Mask
         $('[data-mask]').inputmask()
 
-        // $('#sel-program').change(function() {
-        //     if ($('#sel-program').val() !== '') {
-        //         $('#sel-instructor').removeAttr('disabled');
-        //         $('#sel-instructor').empty();
-        //         $('#sel-semester').removeAttr('disabled');
-        //         $('#sel-semester').val(null).trigger('change');
-        //         $('#sel-sub').empty();
+        $('#sel-program').change(function() {
+            if ($('#sel-program').val() !== '') {
+                $('#sel-instructor').removeAttr('disabled');
+                $('#sel-instructor').empty();
+                $('#sel-semester').removeAttr('disabled');
+                $('#sel-semester').val(null).trigger('change');
+                $('#sel-sub').empty();
 
-        //         const path = '';
-        //         const id = $('#sel-program').val();
+                const path = "{{ route('student_evaluation_get_instructor') }}";
+                const id = $('#sel-program').val();
 
-        //         $.ajax({
-        //             type: "POST",
-        //             cache: false,
-        //             url: path,
-        //             data: {
-        //                 id: id
-        //             },
-        //             success: function(data) {
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    url: path,
+                    data: {
+                        id: id
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
 
-        //                 const json = JSON.parse(data);
+                        const json = JSON.parse(data);
 
-        //                 $('#sel-instructor').append(
-        //                     '<option value="" selected disabled>---Select Instructor---</option>');
+                        $('#sel-instructor').append(
+                            '<option value="" selected disabled>---Select Instructor---</option>');
 
-        //                 json.forEach(teacher => {
-        //                     const fullName =
-        //                         `${teacher.teacherFirstname} ${teacher.teacherMiddlename}. ${teacher.teacherLastname}`;
-        //                     $('#sel-instructor').append(
-        //                         `<option value="${teacher.id}">${fullName}</option>`);
-        //                 });
+                        json.forEach(teacher => {
+                            const fullName =
+                                `${teacher.firstname} ${teacher.middlename}. ${teacher.lastname}`;
+                            $('#sel-instructor').append(
+                                `<option value="${teacher.id}">${fullName}</option>`);
+                        });
 
-        //             }
-        //         });
+                    }
+                });
 
-        //     } else {
-        //         $('#sel-instructor').empty();
-        //         $('#sel-instructor').val(null).trigger('change');
-        //         $('#sel-instructor').attr('disabled', 'disabled');
-        //     }
-        // });
+            } else {
+                $('#sel-instructor').empty();
+                $('#sel-instructor').val(null).trigger('change');
+                $('#sel-instructor').attr('disabled', 'disabled');
+            }
+        });
 
-        // $('#sel-semester').change(function() {
-        //     if ($('#sel-semester').val() !== '') {
-        //         $('#sel-sub').removeAttr('disabled');
-        //         $('#sel-sub').empty();
+        $('#sel-semester').change(function() {
+            if ($('#sel-semester').val() !== '') {
+                $('#sel-sub').removeAttr('disabled');
+                $('#sel-sub').empty();
 
-        //         const path = '';
-        //         const id = $('#sel-semester').val();
-        //         const program = $('#sel-program').val();
+                const path = "{{ route('student_evaluation_get_subject') }}";
+                const id = $('#sel-semester').val();
+                const program = $('#sel-program').val();
 
-        //         $.ajax({
-        //             type: "POST",
-        //             cache: false,
-        //             url: path,
-        //             data: {
-        //                 id: id,
-        //                 program: program
-        //             },
-        //             success: function(data) {
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    url: path,
+                    data: {
+                        id: id,
+                        program: program
+                    },
+                    success: function(data) {
 
-        //                 const json = JSON.parse(data);
+                        const json = JSON.parse(data);
 
-        //                 json.forEach(subjects => {
-        //                     const subject =
-        //                         `( ${subjects.subjectCode} ) - ${subjects.subjectName}`;
-        //                     $('#sel-sub').append(
-        //                         `<option value="${subjects.id}">${subject}</option>`);
-        //                 });
+                        json.forEach(subjects => {
+                            const subject =
+                                `( ${subjects.subject_code} ) - ${subjects.subject_name}`;
+                            $('#sel-sub').append(
+                                `<option value="${subjects.id}">${subject}</option>`);
+                        });
 
-        //             }
-        //         });
-        //     } else {
-        //         $('#sel-sub').empty();
-        //         $('#sel-sub').val(null).trigger('change');
-        //         $('#sel-sub').attr('disabled', 'disabled');
-        //     }
-        // });
+                    }
+                });
+            } else {
+                $('#sel-sub').empty();
+                $('#sel-sub').val(null).trigger('change');
+                $('#sel-sub').attr('disabled', 'disabled');
+            }
+        });
     </script>
 </x-layout>

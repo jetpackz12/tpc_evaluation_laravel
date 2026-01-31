@@ -104,8 +104,6 @@
             },
             success: function(data) {
 
-                console.log(data);
-
                 const jsonData = JSON.parse(data);
 
                 switch (jsonData['response']) {
