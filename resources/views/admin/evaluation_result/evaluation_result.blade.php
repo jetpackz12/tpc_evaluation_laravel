@@ -368,34 +368,38 @@
                         console.log(data);
 
                         const jsonData = JSON.parse(data);
-                        const teacher_name = jsonData.teacher.firstname + " " + jsonData.teacher.middlename + " " + jsonData.teacher.lastname;
+                        const teacher_name = jsonData.teacher.firstname + " " + jsonData.teacher
+                            .middlename + " " + jsonData.teacher.lastname;
 
                         $('#exampleInputInstructorName').val(teacher_name);
                         $('#exampleInputAcadamicYear').val(academic_year);
                         $('#exampleInputSemester').val($('#sel-semester option:selected')
                             .text());
 
-                        if (jsonData.evaluations.length < 1 && jsonData.subject_matters.length < 1) {
+                        if (jsonData.evaluation_facetoface.length < 1 && jsonData
+                            .evaluation_online.length < 1 && jsonData.subject_matters.length < 1
+                        ) {
                             $('.face').val('No Evaluation');
                             $('.online').val('No Evaluation');
                             $('.matter').text('No Evaluation');
                         } else {
-                            jsonData.evaluations.forEach(element => {
-                                if (element.modality_id == 1 && element.rate !== '') {
-                                    $(`#face${element.question_id}`).val(element.rate);
-                                } else {
-                                    $(`#online${element.question_id}`).val(element
-                                    .rate);
-                                }
+
+                            jsonData.evaluation_facetoface.forEach(element => {
+                                $(`#face${element.question_id}`).val(element.rate);
+                            });
+
+                            jsonData.evaluation_online.forEach(element => {
+                                $(`#online${element.question_id}`).val(element.rate);
                             });
 
                             jsonData.subject_matters.forEach(element => {
-                                $(`#matter${element.subject_matter_question_id}`).text(
-                                    element.response);
+
+                                $(`#matter${element.subject_matter_question_id}`)
+                                    .append(
+                                        `<b>${element.number}. ${element.response} </b><br>`
+                                    );
                             });
                         }
-
-
                     }
                 });
             });

@@ -13,6 +13,9 @@ use App\Models\FaceToFaceQuestion;
 use App\Models\SubjectMatter;
 use App\Models\SubjectMatterQuestion;
 use App\Models\ViewEvaluation;
+use App\Models\ViewEvaluationFaceToFace;
+use App\Models\ViewEvaluationOnline;
+use Illuminate\Support\Facades\DB;
 
 class EvaluationController extends Controller
 {
@@ -69,7 +72,26 @@ class EvaluationController extends Controller
             'subject_matters' => SubjectMatter::where('teacher_id', '=', $request->id)
                 ->where('semester_id', '=', $request->semester)
                 ->where('academic_year', '=', $request->academic_year)
-                ->select('subject_matters.*', 'subject_matters.id AS subject_matter_id')
+                ->select(
+                    'subject_matters.*',
+                    'subject_matters.id AS subject_matter_id',
+                    DB::raw('ROW_NUMBER() OVER (
+                            PARTITION BY subject_matter_question_id
+                            ORDER BY created_at
+                        ) as number')
+                )
+                ->get(),
+            'evaluation_facetoface' => ViewEvaluationFaceToFace::where('teacher_id', '=', $request->id)
+                ->where('semester_id', '=', $request->semester)
+                ->where('academic_year', '=', $request->academic_year)
+                ->select('question_id', DB::raw('ROUND(AVG(rate), 2) as rate'))
+                ->groupBy('question_id')
+                ->get(),
+            'evaluation_online' => ViewEvaluationOnline::where('teacher_id', '=', $request->id)
+                ->where('semester_id', '=', $request->semester)
+                ->where('academic_year', '=', $request->academic_year)
+                ->select('question_id', DB::raw('ROUND(AVG(rate), 2) as rate'))
+                ->groupBy('question_id')
                 ->get()
         ];
 
