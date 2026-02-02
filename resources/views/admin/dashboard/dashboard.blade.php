@@ -177,7 +177,7 @@
                             <!-- small box -->
                             <div class="small-box bg-primary">
                                 <div class="inner">
-                                    <h3>xxxx</h3>
+                                    <h3>{{ $evaluations }}</h3>
 
                                     <p>Evaluation Result</p>
                                 </div>

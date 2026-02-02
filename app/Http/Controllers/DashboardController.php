@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Evaluation;
 use App\Models\FaceToFaceQuestion;
 use App\Models\OnlineQuestion;
 use App\Models\Program;
@@ -32,6 +33,7 @@ class DashboardController extends Controller
             'categories' => Category::count(),
             'face_to_faces_questions' => FaceToFaceQuestion::count(),
             'online_questions' => OnlineQuestion::count(),
+            'evaluations' => Evaluation::count(),
         ];
 
         return view('admin.dashboard.dashboard', $render_data);
