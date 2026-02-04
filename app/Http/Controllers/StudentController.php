@@ -95,6 +95,8 @@ class StudentController extends Controller
                 'response' => $this->FAILED_RESPONSE,
                 'message' => "Failed, Account has not been approved by the admin."
             ]);
+            
+            return $data;
         }
 
         if ($user && Hash::check($request->password, $user->password)) {
