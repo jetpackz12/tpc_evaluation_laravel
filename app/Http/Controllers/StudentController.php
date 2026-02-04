@@ -88,6 +88,15 @@ class StudentController extends Controller
 
         $user = User::where("username", $request->identification)->first();
 
+        $student = Student::where("user_id", $user->id)->first();
+
+        if ($student->status != $this->APPROVED) {
+            $data = json_encode([
+                'response' => $this->FAILED_RESPONSE,
+                'message' => "Failed, Account has not been approved by the admin."
+            ]);
+        }
+
         if ($user && Hash::check($request->password, $user->password)) {
 
             Auth::login($user);
