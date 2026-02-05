@@ -46,9 +46,12 @@ class EvaluationController extends Controller
      */
     public function show(Request $request)
     {
+
+        // dd($request->program);
+
         $teacher = ViewTeacher::all();
 
-        if ($request->program_id > 0) {
+        if ($request->program > 0) {
             $teacher = ViewTeacher::where('program_id', '=', $request->program)->get();
         }
 
