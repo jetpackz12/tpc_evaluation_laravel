@@ -13,12 +13,13 @@ class AccountStatusSeeder extends Seeder
      */
     public function run(): void
     {
-         AccountStatus::create([
-            'description' => 'approved',
-        ]);
         
         AccountStatus::create([
             'description' => 'pending',
+        ]);
+        
+         AccountStatus::create([
+            'description' => 'approved',
         ]);
 
         AccountStatus::create([
